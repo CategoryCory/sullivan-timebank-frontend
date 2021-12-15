@@ -1,0 +1,23 @@
+.homepageHero {
+    width: 100%;
+    padding: 8rem 0;
+    background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0),
+            rgba(255, 255, 255, 1)
+        ),
+        url(../images/hands.jpg) no-repeat center center;
+    background-size: cover;
+}
+
+.homepageCTA {
+    padding: 8rem 0 10rem;
+    text-align: center;
+    background: linear-gradient(
+            rgba(255, 255, 255, 1) 0%,
+            rgba(255, 255, 255, 0.8) 30%,
+            rgba(255, 255, 255, 0.8)
+        ),
+        url(../images/group.jpg) no-repeat center center;
+    background-size: cover;
+}
