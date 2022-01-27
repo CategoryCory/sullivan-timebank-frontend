@@ -5,13 +5,18 @@ import TextInput from "./common/forms/TextInput";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LoginIcon from '@mui/icons-material/Login';
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
+import { useStore } from "../stores/store";
 import sullivanTorchPic from "../images/sullivan-logo-torch.png";
 import { CircularProgress } from '@mui/material';
 
 export default function Login() {
+    const { userStore } = useStore();
+    const navigate = useNavigate();
+
     return (
         <Formik
-            initialValues={{ email: "", password: "" }}
+            initialValues={{ email: "", password: "", error: null }}
             validationSchema={Yup.object({
                 email: Yup
                         .string()
@@ -22,12 +27,11 @@ export default function Login() {
                         .string()
                         .required("Please enter your password."),
             })}
-            onSubmit={(values, { setSubmitting }) => {
-                setSubmitting(true);
-                setTimeout(() => {
-                    console.log(JSON.stringify(values, null, 2));
-                    setSubmitting(false);
-                }, 1000);
+            onSubmit={(values, { setErrors }) => {
+                userStore.login(values).catch( error => {
+                    setErrors({error: "Invalid email or password"})
+                });
+                navigate("/");
             }}
         >
             {formik => (
