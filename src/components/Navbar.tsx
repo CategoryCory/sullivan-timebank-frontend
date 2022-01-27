@@ -15,9 +15,9 @@ export default function Navbar() {
                         <Stack direction="row" spacing={4} alignItems="center">
                             <NavLink to="/about" className={({ isActive }) => (isActive ? "active-navlink" : "navlink")}>About</NavLink>
                             <NavLink to="/jobs" className={({ isActive }) => (isActive ? "active-navlink" : "navlink")}>Jobs</NavLink>
-                            <NavLink to="/" className="navlink">Login</NavLink>
+                            <NavLink to="/login" className="navlink">Login</NavLink>
                             <NavLink
-                                to="/"
+                                to="/register"
                                 className="btn btn-regular btn-outlined text-indigo-600 border-indigo-600 hover:text-white hover:bg-indigo-600"
                             >
                                 Sign Up
