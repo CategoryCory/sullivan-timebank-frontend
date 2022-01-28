@@ -1,13 +1,10 @@
 import { makeAutoObservable, runInAction } from "mobx";
-// import { useNavigate } from "react-router-dom";
 import agent from "../api/agent";
 import { User, UserFormValues } from "../models/user";
 import { store } from "./store";
 
 export default class UserStore {
     user: User | null = null;
-
-    // navigate = useNavigate();
 
     constructor() {
         makeAutoObservable(this);
@@ -22,7 +19,6 @@ export default class UserStore {
             const user = await agent.Account.login(creds);
             store.commonStore.setToken(user.token);
             runInAction(() => this.user = user);
-            // this.navigate("/");
         } catch (error) {
             throw error;
         }

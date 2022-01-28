@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { Link } from 'react-router-dom';
 import TextInput from "./common/forms/TextInput";
@@ -12,7 +12,14 @@ import { CircularProgress } from '@mui/material';
 
 export default function Login() {
     const { userStore } = useStore();
+    const [loginSuccess, setLoginSuccess] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (loginSuccess) {
+            navigate("/", { replace: true });
+        }
+    }, [loginSuccess, navigate]);
 
     return (
         <Formik
@@ -27,11 +34,15 @@ export default function Login() {
                         .string()
                         .required("Please enter your password."),
             })}
-            onSubmit={(values, { setErrors }) => {
-                userStore.login(values).catch( error => {
+            onSubmit={(values, { setErrors, setSubmitting }) => {
+                try {
+                    userStore.login(values)
+                    setLoginSuccess(true);
+                } catch (error) {
                     setErrors({error: "Invalid email or password"})
-                });
-                navigate("/");
+                }
+
+                setSubmitting(false);                
             }}
         >
             {formik => (
