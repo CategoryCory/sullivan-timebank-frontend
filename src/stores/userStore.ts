@@ -14,6 +14,16 @@ export default class UserStore {
         return !!this.user;
     }
 
+    register = async (creds: UserFormValues) => {
+        try {
+            const user = await agent.Account.register(creds);
+            store.commonStore.setToken(user.token);
+            runInAction(() => this.user = user);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     login = async (creds: UserFormValues) => {
         try {
             const user = await agent.Account.login(creds);
@@ -28,7 +38,6 @@ export default class UserStore {
         store.commonStore.setToken(null);
         window.localStorage.removeItem("jwt");
         this.user = null;
-        // this.navigate("/");
     }
 
     getUser = async () => {

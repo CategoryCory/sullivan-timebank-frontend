@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from "react-router-dom";
 import { AppBar, Container, Stack, Toolbar } from '@mui/material';
-import logo from "../images/sullivan-logo-color.png";
+import logo from "../../images/sullivan-logo-color.png";
 
 export default function Navbar() {
     return (

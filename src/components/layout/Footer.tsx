@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import sullivanLogoPic from "../images/sullivan-logo.png";
+import sullivanLogoPic from "../../images/sullivan-logo.png";
 
 export default function Footer() {
     return (

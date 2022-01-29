@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { Link } from 'react-router-dom';
-import TextInput from "./common/forms/TextInput";
+import TextInput from "../common/forms/TextInput";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LoginIcon from '@mui/icons-material/Login';
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { useStore } from "../stores/store";
-import sullivanTorchPic from "../images/sullivan-logo-torch.png";
+import { useStore } from "../../stores/store";
+import sullivanTorchPic from "../../images/sullivan-logo-torch.png";
 import { CircularProgress } from '@mui/material';
 
 export default function Login() {
@@ -36,10 +36,10 @@ export default function Login() {
             })}
             onSubmit={(values, { setErrors, setSubmitting }) => {
                 try {
-                    userStore.login(values)
+                    userStore.login(values);
                     setLoginSuccess(true);
                 } catch (error) {
-                    setErrors({error: "Invalid email or password"})
+                    setErrors({error: "Invalid email or password"});
                 }
 
                 setSubmitting(false);                

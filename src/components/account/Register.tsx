@@ -1,15 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from "yup";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import { CircularProgress } from '@mui/material';
-import TextInput from './common/forms/TextInput';
-import CheckboxInput from './common/forms/CheckboxInput';
-import sullivanTorchPic from "../images/sullivan-logo-torch.png";
+import TextInput from '../common/forms/TextInput';
+import CheckboxInput from '../common/forms/CheckboxInput';
+import sullivanTorchPic from "../../images/sullivan-logo-torch.png";
+import { useStore } from '../../stores/store';
 
-export default function Login() {
+export default function Register() {
+    const { userStore } = useStore();
+    const [registerSuccess, setRegisterSuccess] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (registerSuccess) {
+            navigate("/", { replace: true });
+        }
+    }, [registerSuccess, navigate]);
+
     return (
         <Formik
             initialValues={{
@@ -19,6 +30,7 @@ export default function Login() {
                 password: "",
                 confirmPassword: "",
                 termsAndConditions: false,
+                error: null,
             }}
             validationSchema={Yup.object({
                 firstname: Yup
@@ -45,12 +57,15 @@ export default function Login() {
                         .boolean()
                         .oneOf([true], "You must accept the terms and conditions to create an account."),
             })}
-            onSubmit={(values, { setSubmitting }) => {
-                setSubmitting(true);
-                setTimeout(() => {
-                    console.log(JSON.stringify(values, null, 2));
-                    setSubmitting(false);
-                }, 1000);
+            onSubmit={(values, { setErrors, setSubmitting }) => {
+                try {
+                    userStore.register(values);
+                    setRegisterSuccess(true);
+                } catch(error) {
+                    setErrors({error: "Something went wrong"});
+                }
+
+                setSubmitting(false);
             }}
         >
             {formik => (
@@ -96,8 +111,11 @@ export default function Login() {
                             </CheckboxInput>
                             <button
                                 type="submit"
-                                className={formik.isSubmitting ? "form-button-disabled" : "form-button"}
-                                disabled={formik.isSubmitting}
+                                className={!formik.isValid || !formik.dirty || formik.isSubmitting 
+                                    ? "form-button-disabled"
+                                    : "form-button"
+                                }
+                                disabled={!formik.isValid || !formik.dirty || formik.isSubmitting}
                             >
                                 {formik.isSubmitting 
                                     ? <CircularProgress size={16} sx={{ color: "#fff" }} /> 
