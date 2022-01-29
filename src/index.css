@@ -49,12 +49,12 @@
     .form-button {
         @apply flex justify-center items-center gap-3 mt-2 py-3 bg-indigo-600 hover:bg-indigo-700 font-bold 
             text-white tracking-wider rounded focus:outline-none focus:ring-2 focus:ring-offset-2 
-            focus:ring-indigo-600/80 transition-all duration-150;
+            focus:ring-indigo-600;
     }
 
     .form-button-disabled {
         @apply flex justify-center items-center gap-3 mt-2 py-3 bg-indigo-400 font-bold 
             text-white tracking-wider rounded focus:outline-none focus:ring-2 focus:ring-offset-2 
-            focus:ring-indigo-600/80 transition-all duration-150;
+            focus:ring-indigo-600;
     }
 }

@@ -91,7 +91,7 @@ export default function Login() {
                                 {formik.isSubmitting 
                                     ? <CircularProgress size={16} sx={{ color: "#fff" }} /> 
                                     : <AppRegistrationIcon fontSize="small" />}
-                                    Log In
+                                    Create account
                             </button>
                         </Form>
                         <div className="mt-6 pt-6 flex flex-col gap-4 border-t border-slate-300">

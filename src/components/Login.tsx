@@ -76,12 +76,12 @@ export default function Login() {
                         </Form>
                         <div className="mt-6 pt-6 flex flex-col gap-4 border-t border-slate-300">
                             <div>
-                                <span className="text-slate-600">Don't have an account?</span>
+                                <span className="text-slate-600">Don't have an account yet?</span>
                                 <Link 
                                     to="/register"
                                     className="ml-3 font-bold text-indigo-600"
                                 >
-                                    Sign up
+                                    Create account
                                 </Link>
                             </div>
                             <Link
