@@ -6,10 +6,12 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Layout from './components/Layout';
 import Jobs from './components/Jobs';
+import ModalContainer from './components/common/modals/ModalContainer';
 
 function App() {
   return (
     <>
+      <ModalContainer />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
