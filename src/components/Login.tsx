@@ -46,7 +46,7 @@ export default function Login() {
             }}
         >
             {formik => (
-                <div className="h-screen px-4 flex flex-col justify-center items-center gap-3 md:gap-6 bg-zinc-100">
+                <div className="min-h-screen px-4 flex flex-col justify-center items-center gap-3 md:gap-6 bg-zinc-100">
                     <img src={sullivanTorchPic} alt="Sullivan Logo" className="w-10 md:w-14" />
                     <h2 className="font-sans font-bold text-slate-700 text-2xl lg:text-4xl">
                         <span className="text-indigo-600">Log in</span> to your account

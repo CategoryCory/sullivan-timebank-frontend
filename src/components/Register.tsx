@@ -4,9 +4,10 @@ import { Link } from 'react-router-dom';
 import * as Yup from "yup";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
-import sullivanTorchPic from "../images/sullivan-logo-torch.png";
-import TextInput from './common/forms/TextInput';
 import { CircularProgress } from '@mui/material';
+import TextInput from './common/forms/TextInput';
+import CheckboxInput from './common/forms/CheckboxInput';
+import sullivanTorchPic from "../images/sullivan-logo-torch.png";
 
 export default function Login() {
     return (
@@ -17,6 +18,7 @@ export default function Login() {
                 email: "",
                 password: "",
                 confirmPassword: "",
+                termsAndConditions: false,
             }}
             validationSchema={Yup.object({
                 firstname: Yup
@@ -39,6 +41,9 @@ export default function Login() {
                         .string()
                         .oneOf([Yup.ref("password"), null], "The passwords do not match.")
                         .required("Please confirm your password."),
+                termsAndConditions: Yup
+                        .boolean()
+                        .oneOf([true], "You must accept the terms and conditions to create an account."),
             })}
             onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(true);
@@ -49,7 +54,7 @@ export default function Login() {
             }}
         >
             {formik => (
-                <div className="h-screen px-4 flex flex-col justify-center items-center gap-3 md:gap-6 bg-zinc-100">
+                <div className="min-h-screen px-4 flex flex-col justify-center items-center gap-3 md:gap-6 bg-zinc-100">
                     <img src={sullivanTorchPic} alt="Sullivan Logo" className="w-10 md:w-14" />
                     <h2 className="font-sans font-bold text-slate-700 text-2xl lg:text-4xl">
                         <span className="text-indigo-600">Sign up</span> for an account
@@ -83,6 +88,12 @@ export default function Login() {
                                 name="confirmPassword"
                                 type="password"
                             />
+                            <CheckboxInput
+                                name="termsAndConditions"
+                            >
+                                I have read and agree to the
+                                <Link to="/" className="text-indigo-600">terms and conditions.</Link>
+                            </CheckboxInput>
                             <button
                                 type="submit"
                                 className={formik.isSubmitting ? "form-button-disabled" : "form-button"}
