@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import { CircularProgress } from '@mui/material';
+import { toast } from "react-toastify";
 import TextInput from '../common/forms/TextInput';
 import CheckboxInput from '../common/forms/CheckboxInput';
 import sullivanTorchPic from "../../images/sullivan-logo-torch.png";
@@ -17,7 +18,8 @@ export default function Register() {
 
     useEffect(() => {
         if (registerSuccess) {
-            navigate("/", { replace: true });
+            toast.success("Your account has been created, and you may now log in.");
+            navigate("/login", { replace: true });
         }
     }, [registerSuccess, navigate]);
 

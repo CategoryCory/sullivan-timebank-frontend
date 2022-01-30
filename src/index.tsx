@@ -1,15 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import './index.css';
 import App from './App';
+import { BrowserRouter } from 'react-router-dom';
+import { store, StoreContext } from "./stores/store";
+import "react-toastify/dist/ReactToastify.min.css";
+import './index.css';
 // import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <StoreContext.Provider value={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </StoreContext.Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

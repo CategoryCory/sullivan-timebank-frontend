@@ -1,22 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { Formik, Form } from 'formik';
+import { ErrorMessage, Formik, Form } from 'formik';
 import { Link } from 'react-router-dom';
 import TextInput from "../common/forms/TextInput";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Alert, CircularProgress, Collapse, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import LoginIcon from '@mui/icons-material/Login';
+import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../../stores/store";
 import sullivanTorchPic from "../../images/sullivan-logo-torch.png";
-import { CircularProgress } from '@mui/material';
 
 export default function Login() {
     const { userStore } = useStore();
     const [loginSuccess, setLoginSuccess] = useState(false);
+    const [errorIsOpen, setErrorIsOpen] = useState(false);
     const navigate = useNavigate();
+
+    // if (userStore.isLoggedIn) {
+    //     console.log("You're already logged in!");
+    // } else {
+    //     console.log(userStore.user);
+    //     console.log("Is this working?");
+    // }
 
     useEffect(() => {
         if (loginSuccess) {
+            toast.success("You are now logged in.");
             navigate("/", { replace: true });
         }
     }, [loginSuccess, navigate]);
@@ -34,15 +45,15 @@ export default function Login() {
                         .string()
                         .required("Please enter your password."),
             })}
-            onSubmit={(values, { setErrors, setSubmitting }) => {
+            onSubmit={async (values, { setErrors, setSubmitting }) => {
                 try {
-                    userStore.login(values);
+                    await userStore.login(values);
                     setLoginSuccess(true);
-                } catch (error) {
+                } catch(error) {
                     setErrors({error: "Invalid email or password"});
+                    setErrorIsOpen(true);
+                    setSubmitting(false);
                 }
-
-                setSubmitting(false);                
             }}
         >
             {formik => (
@@ -52,6 +63,29 @@ export default function Login() {
                         <span className="text-indigo-600">Log in</span> to your account
                     </h2>
                     <div className="container max-w-xl px-3 lg:px-6 py-8 rounded-lg bg-white shadow-lg shadow-zinc-400/30">
+                        <Collapse in={errorIsOpen}>
+                            <ErrorMessage
+                                name="error"
+                                render={() => (
+                                    <Alert
+                                        action={
+                                            <IconButton
+                                                aria-label="close"
+                                                color="inherit"
+                                                size="small"
+                                                onClick={() => setErrorIsOpen(false)}
+                                            >
+                                                <CloseIcon fontSize="inherit" />
+                                            </IconButton>
+                                        }
+                                        severity="error"
+                                        sx={{ mb: 2 }}
+                                    >
+                                        Invalid username or password
+                                    </Alert>
+                                )}
+                            />
+                        </Collapse>
                         <Form className="w-full flex flex-col gap-4">
                             <TextInput
                                 label="Email Address"
