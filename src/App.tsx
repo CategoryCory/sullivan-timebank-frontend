@@ -8,7 +8,7 @@ import Register from "./components/account/Register";
 import Layout from './components/layout/Layout';
 import Jobs from './components/jobs/Jobs';
 import ModalContainer from './components/common/modals/ModalContainer';
-import { ToastContainer } from 'react-toastify';
+import { Slide, ToastContainer } from 'react-toastify';
 import LoadingComponent from './components/LoadingComponent';
 import { useStore } from './stores/store';
 import UserDashboard from './components/account/UserDashboard';
@@ -29,7 +29,13 @@ function App() {
 
   return (
     <>
-      <ToastContainer position="bottom-right" />
+      <ToastContainer 
+        position="bottom-right"
+        theme="dark"
+        transition={Slide}
+        pauseOnHover={false}
+        draggable
+      />
       <ModalContainer />
       <Routes>
         <Route path="/login" element={<Login />} />

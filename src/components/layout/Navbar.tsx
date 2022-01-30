@@ -1,14 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
-import { AppBar, Container, Stack, Toolbar } from '@mui/material';
+import { AppBar, Avatar, Container, IconButton, ListItemIcon, Menu, MenuItem, Stack, Toolbar } from '@mui/material';
 import { toast } from "react-toastify";
 import { useStore } from "../../stores/store";
 import logo from "../../images/sullivan-logo-color.png";
+import { Logout } from '@mui/icons-material';
 
 export default function Navbar() {
     const [logoutSuccess, setLogoutSuccess] = useState(false);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const navigate = useNavigate();
     const { userStore } = useStore();
+
+    const userMenuIsOpen = Boolean(anchorEl);
+
+    const handleUserMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    }
+
+    const handleUserMenuClose = () => {
+        setAnchorEl(null);
+    }
 
     const logUserOut = () => {
         try {
@@ -51,7 +63,68 @@ export default function Navbar() {
                                 </>
                                 ) : (
                                 <>
-                                    <button onClick={logUserOut} className="btn btn-regular btn-outlined text-indigo-600 border-indigo-600 hover:text-white hover:bg-indigo-600">Logout</button>
+                                    <div className="pl-6 flex justify-center items-center border-l border-gray-300">
+                                        <span className="font-bold text-gray-500">Hi, {userStore.user?.displayName}!</span>
+                                        <IconButton
+                                            onClick={handleUserMenuClick}
+                                            size="small"
+                                            sx={{ ml: 2 }}
+                                            aria-controls={userMenuIsOpen ? 'user-menu' : undefined}
+                                            aria-haspopup="true"
+                                            aria-expanded={userMenuIsOpen ? "true" : undefined}
+                                        >
+                                            <Avatar sx={{ width: 36, height: 36, backgroundColor: "#4F46E5" }}>
+                                                {userStore.user?.image 
+                                                    ? <span className="text-sm">{userStore.user!.displayName.substring(0, 1).toUpperCase()}</span>
+                                                    : <span className="text-sm">{userStore.user!.displayName.substring(0, 1).toUpperCase()}</span>
+                                                }
+                                            </Avatar>
+                                        </IconButton>
+                                        <Menu
+                                            anchorEl={anchorEl}
+                                            id="user-menu"
+                                            open={userMenuIsOpen}
+                                            onClose={handleUserMenuClose}
+                                            onClick={handleUserMenuClose}
+                                            PaperProps={{
+                                                elevation: 0,
+                                                sx: {
+                                                    overflow: "visible",
+                                                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.2))",
+                                                    mt: 1.5,
+                                                    "& .MuiAvatar-root": {
+                                                        width: 32,
+                                                        height: 32,
+                                                        ml: -0.5,
+                                                        mr: 1,
+                                                    },
+                                                    "&:before": {
+                                                        content: '""',
+                                                        display: 'block',
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        right: 14,
+                                                        width: 10,
+                                                        height: 10,
+                                                        bgcolor: 'background.paper',
+                                                        transform: 'translateY(-50%) rotate(45deg)',
+                                                        zIndex: 0,
+                                                    },
+                                                },
+                                            }}
+                                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                                        >
+                                            <MenuItem>
+                                                <ListItemIcon>
+                                                    <Logout fontSize="small" />
+                                                </ListItemIcon>
+                                                <span className="font-sans text-gray-600">
+                                                    <button onClick={logUserOut}>Logout</button>
+                                                </span>
+                                            </MenuItem>
+                                        </Menu>
+                                    </div>
                                 </>
                                 )
                             }
