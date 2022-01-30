@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AppBar, Avatar, Container, IconButton, ListItemIcon, Menu, MenuItem, Stack, Toolbar } from '@mui/material';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { toast } from "react-toastify";
 import { useStore } from "../../stores/store";
 import logo from "../../images/sullivan-logo-color.png";
@@ -117,7 +118,13 @@ export default function Navbar() {
                                         >
                                             <MenuItem>
                                                 <ListItemIcon>
-                                                    <Logout fontSize="small" />
+                                                    <AccountBoxIcon fontSize="small" sx={{ color: "#6B7280" }} />
+                                                </ListItemIcon>
+                                                <Link to="/dashboard" className="font-sans text-gray-600">Dashboard</Link>
+                                            </MenuItem>
+                                            <MenuItem>
+                                                <ListItemIcon>
+                                                    <Logout fontSize="small" sx={{ color: "#6B7280" }} />
                                                 </ListItemIcon>
                                                 <span className="font-sans text-gray-600">
                                                     <button onClick={logUserOut}>Logout</button>
