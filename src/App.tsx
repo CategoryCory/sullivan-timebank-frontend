@@ -11,6 +11,8 @@ import ModalContainer from './components/common/modals/ModalContainer';
 import { ToastContainer } from 'react-toastify';
 import LoadingComponent from './components/LoadingComponent';
 import { useStore } from './stores/store';
+import UserDashboard from './components/account/UserDashboard';
+import NotFound from './components/NotFound';
 
 function App() {
   const {commonStore, userStore} = useStore();
@@ -36,7 +38,9 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/jobs" element={<Jobs />} />
+          <Route path="/dashboard" element={<UserDashboard />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

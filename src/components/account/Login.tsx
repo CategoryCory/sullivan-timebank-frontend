@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import LoginIcon from '@mui/icons-material/Login';
 import { toast } from "react-toastify";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { useStore } from "../../stores/store";
 import sullivanTorchPic from "../../images/sullivan-logo-torch.png";
 
@@ -18,19 +18,16 @@ export default function Login() {
     const [errorIsOpen, setErrorIsOpen] = useState(false);
     const navigate = useNavigate();
 
-    // if (userStore.isLoggedIn) {
-    //     console.log("You're already logged in!");
-    // } else {
-    //     console.log(userStore.user);
-    //     console.log("Is this working?");
-    // }
-
     useEffect(() => {
         if (loginSuccess) {
             toast.success("You are now logged in.");
-            navigate("/", { replace: true });
+            navigate("/dashboard", { replace: true });
         }
     }, [loginSuccess, navigate]);
+    
+    if (userStore.isLoggedIn) {
+        return <Navigate to="/dashboard" replace={true} />;
+    }
 
     return (
         <Formik
