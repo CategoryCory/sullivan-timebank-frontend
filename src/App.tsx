@@ -13,6 +13,7 @@ import LoadingComponent from './components/LoadingComponent';
 import { useStore } from './stores/store';
 import UserDashboard from './components/account/UserDashboard';
 import NotFound from './components/NotFound';
+import UserProfile from './components/account/UserProfile';
 
 function App() {
   const {commonStore, userStore} = useStore();
@@ -45,6 +46,7 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/dashboard" element={<UserDashboard />} />
+          <Route path="/profile" element={<UserProfile />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

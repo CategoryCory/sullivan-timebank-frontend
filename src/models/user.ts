@@ -1,9 +1,18 @@
 export interface User {
+    firstName: string;
+    lastName: string;
     username: string;
-    email: string;
     displayName: string;
-    token: string;
+    streetAddress: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    email: string;
+    phone: string;
+    birthday: Date | null;
     image?: string;
+    isApproved: boolean;
+    token: string;
 }
 
 export interface UserFormValues {
