@@ -10,11 +10,9 @@ import DateInput from '../common/forms/DateInput';
 import TextareaInput from '../common/forms/TextareaInput';
 import TextInput from '../common/forms/TextInput';
 import { UserProfile } from '../../models/user';
-import { Navigate, useNavigate } from 'react-router-dom';
 
 function UserProfileForm() {
     const { userStore, userProfileStore } = useStore();
-    const navigate = useNavigate();
     const { getByEmail, updateByEmail, loadingInitial, loading } = userProfileStore;
     const [userProfile, setUserProfile] = useState<UserProfile>({
         firstName: "",
@@ -24,7 +22,7 @@ function UserProfileForm() {
         state: "",
         zipCode: "",
         email: "",
-        phone: "",
+        phoneNumber: "",
         birthday: null,
         biography: "",
     });
@@ -65,23 +63,22 @@ function UserProfileForm() {
                 streetAddress: Yup
                             .string()
                             .max(100, "Street address cannot be greater than 100 characters.")
-                            .required("Please enter your street address.")
-                            .nullable(),
+                            .required("Please enter your street address."),
                 city: Yup
                             .string()
                             .max(50, "City cannot be greater than 50 characters.")
-                            .required("Please enter your city.")
-                            .nullable(),
+                            .required("Please enter your city."),
                 state: Yup
                             .string()
                             .max(25, "State cannot be greater than 25 characters.")
-                            .required("Please enter your state.")
-                            .nullable(),
+                            .required("Please enter your state."),
                 zipCode: Yup
                             .string()
                             .max(25, "Zip code cannot be greater than 25 characters.")
-                            .required("Please enter your zip code.")
-                            .nullable(),
+                            .required("Please enter your zip code."),
+                phoneNumber: Yup
+                            .string()
+                            .max(25, "Phone number cannot be greater than 25 characters."),
                 birthday: Yup
                             .date()
                             .required("Please enter your birthday.")
@@ -148,7 +145,7 @@ function UserProfileForm() {
                             <div className='grid grid-cols-1'>
                                 <TextInput
                                     label="Phone"
-                                    name="phone"
+                                    name="phoneNumber"
                                     type="tel"
                                 />
                             </div>
@@ -166,7 +163,7 @@ function UserProfileForm() {
                             />
                         </div>
                     </div>
-                    <div className='w-full mb-6 pb-6 flex justify-end border-b-2 border-gray-300 md:flex-row'>
+                    <div className='w-full mb-6 pb-6 flex justify-end md:flex-row'>
                         <button
                             type="submit"
                             className={formik.isSubmitting ? "form-button-disabled" : "form-button"}
