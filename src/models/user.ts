@@ -14,7 +14,7 @@ export interface UserProfile {
     city: string;
     state: string;
     zipCode: string;
-    email: string;
+    email?: string;
     phone: string;
     birthday: Date | null;
     biography: string;

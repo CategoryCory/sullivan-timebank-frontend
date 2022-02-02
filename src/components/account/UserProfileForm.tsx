@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Formik } from 'formik';
+import { observer } from 'mobx-react-lite';
+import { CircularProgress } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import * as Yup from "yup";
 import LoadingComponent from "../LoadingComponent";
 import { useStore } from '../../stores/store';
@@ -7,13 +10,12 @@ import DateInput from '../common/forms/DateInput';
 import TextareaInput from '../common/forms/TextareaInput';
 import TextInput from '../common/forms/TextInput';
 import { UserProfile } from '../../models/user';
-import { observer } from 'mobx-react-lite';
-import axios from 'axios';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function UserProfileForm() {
     const { userStore, userProfileStore } = useStore();
-    const userEmail = userStore.user!.email;
-    const { getByEmail, loadingInitial } = userProfileStore;
+    const navigate = useNavigate();
+    const { getByEmail, updateByEmail, loadingInitial, loading } = userProfileStore;
     const [userProfile, setUserProfile] = useState<UserProfile>({
         firstName: "",
         lastName: "",
@@ -26,14 +28,26 @@ function UserProfileForm() {
         birthday: null,
         biography: "",
     });
+    
+    let userEmail = "";
+
+    if (userStore.user && userStore.user.email) {
+        userEmail = userStore.user.email;
+    }
 
     useEffect(() => {
-        getByEmail(userEmail).then(profile => {
-            setUserProfile(profile!);
-        });
+        if (userEmail !== "") {
+            getByEmail(userEmail).then(profile => {
+                setUserProfile(profile!);
+            });
+        }
     }, [userEmail, getByEmail]);
 
-    if (loadingInitial) return <LoadingComponent />;
+    // if (userEmail === "") {
+    //     return <Navigate to="/login" replace={true} />
+    // }
+
+    if (loadingInitial || loading) return <LoadingComponent />;
 
     return (
         <Formik
@@ -77,7 +91,9 @@ function UserProfileForm() {
                             .max(500, "Biography cannot be greater than 500 characters."),
             })}
             onSubmit={(values, { setErrors, setSubmitting }) => {
-                console.log(values);
+                updateByEmail(userEmail, values).then(() => {
+                    setUserProfile(values);
+                });
             }}
         >
             {formik => (
@@ -149,6 +165,18 @@ function UserProfileForm() {
                                 rows={4}
                             />
                         </div>
+                    </div>
+                    <div className='w-full mb-6 pb-6 flex justify-end border-b-2 border-gray-300 md:flex-row'>
+                        <button
+                            type="submit"
+                            className={formik.isSubmitting ? "form-button-disabled" : "form-button"}
+                            disabled={formik.isSubmitting || userEmail === ""}
+                        >
+                            {formik.isSubmitting 
+                                    ? <CircularProgress size={16} sx={{ color: "#fff" }} /> 
+                                    : <EditIcon fontSize="small" />}
+                                    Edit Profile
+                        </button>
                     </div>
                 </Form>
             )}

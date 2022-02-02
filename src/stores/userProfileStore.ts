@@ -32,4 +32,19 @@ export default class UserProfileStore {
             }
         // }
     }
+
+    updateByEmail = async (email: string, userProfile: UserProfile) => {
+        this.loading = true;
+        try {
+            await agent.Profile.updateProfileByEmail(email, userProfile);
+            runInAction(() => {
+                this.userProfile = userProfile;
+                this.editMode = false;
+                this.loading = false;
+            });
+        } catch (error) {
+            console.error(error);
+            runInAction(() => this.loading = false);
+        }
+    }
 }

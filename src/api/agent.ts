@@ -54,6 +54,9 @@ const Profile = {
     getProfileByEmail: (email: string) => {
         return requests.get<UserProfile>(`/userprofile/${encodeURIComponent(email)}`);
     },
+    updateProfileByEmail: (email: string, userProfile: UserProfile) => {
+        return requests.put<UserProfile>(`/userprofile/${encodeURIComponent(email)}`, userProfile);
+    }
 }
 
 const agent = {
