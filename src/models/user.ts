@@ -1,8 +1,15 @@
 export interface User {
-    firstName: string;
-    lastName: string;
     username: string;
     displayName: string;
+    email: string;
+    image?: string;
+    isApproved: boolean;
+    token: string;
+}
+
+export interface UserProfile {
+    firstName: string;
+    lastName: string;
     streetAddress: string;
     city: string;
     state: string;
@@ -10,9 +17,7 @@ export interface User {
     email: string;
     phone: string;
     birthday: Date | null;
-    image?: string;
-    isApproved: boolean;
-    token: string;
+    biography: string;
 }
 
 export interface UserFormValues {

@@ -6,10 +6,12 @@ export default function NotApprovedBanner() {
     const { userStore } = useStore();
 
     return (
-        <div className="container mx-auto my-10">
+        <div className="container mx-auto my-10 px-4">
             <h2 className="mb-4 text-4xl text-gray-700">Hi, {userStore.user?.displayName}!</h2>
             <h4 className="text-xl text-gray-500">Just one more step to finish your registration.</h4>
-            <div className="w-full my-14 p-8 flex flex-wrap justify-center items-center gap-24 border-2 border-orange-500 rounded-2xl">
+            <div className="w-full my-14 p-8 flex flex-col items-center gap-4 border-2 border-orange-500 rounded-2xl
+                            lg:flex-row lg:justify-center lg:gap-24"
+            >
                 <div className="">
                     <h4 className="text-xl text-gray-500">
                         <TipsAndUpdatesIcon sx={{ mr: 2, fontSize: "3.5rem" }} />Tips for creating a strong profile

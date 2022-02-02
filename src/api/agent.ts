@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { store } from "../stores/store";
-import { User, UserFormValues } from "../models/user";
+import { User, UserFormValues, UserProfile } from "../models/user";
 
 const sleep = (delay: number) => {
     return new Promise(resolve => {
@@ -50,8 +50,15 @@ const Account = {
     register: (user: UserFormValues) => requests.post<User>("/account/register", user),
 }
 
+const Profile = {
+    getProfileByEmail: (email: string) => {
+        return requests.get<UserProfile>(`/userprofile/${encodeURIComponent(email)}`);
+    },
+}
+
 const agent = {
-    Account
+    Account,
+    Profile,
 }
 
 export default agent;
