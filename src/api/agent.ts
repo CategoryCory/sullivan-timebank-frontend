@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { toast } from "react-toastify";
 import { store } from "../stores/store";
 import { User, UserFormValues, UserProfile } from "../models/user";
 
@@ -23,16 +24,17 @@ axios.interceptors.response.use(async response => {
     await sleep(500);
     return response;
 }, (error: AxiosError) => {
-    // const { data, status, config } = error.response!;
-    // switch (status) {
-    //     case 400:
-    //         if (typeof data === "string") {
-    //             toast.error(data);
-    //         }
-    //         if (config.method === "get" && data.errors.hasOwnProperty("id")) {
-                
-    //         }
-    // }
+    const { data, status, config } = error.response!;
+    switch (status) {
+        case 400:
+            if (typeof data === "string") {
+                toast.error(data);
+            }
+            break;
+        case 404:
+            toast.error("Unauthorized");
+            break;
+    }
 });
 
 const responseBody = <T> (response: AxiosResponse<T>) => response.data;

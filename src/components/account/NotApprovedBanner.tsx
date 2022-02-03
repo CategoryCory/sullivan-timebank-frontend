@@ -13,9 +13,10 @@ export default function NotApprovedBanner() {
                             lg:flex-row lg:justify-center lg:gap-24"
             >
                 <div className="">
-                    <h4 className="text-xl text-gray-500">
-                        <TipsAndUpdatesIcon sx={{ mr: 2, fontSize: "3.5rem" }} />Tips for creating a strong profile
-                    </h4>
+                    <div className="flex items-center gap-3">
+                        <TipsAndUpdatesIcon sx={{ mr: 2, fontSize: "3.5rem" }} />
+                        <h4 className="text-xl text-gray-500">Tips for creating a strong profile</h4>
+                    </div>
                 </div>
                 <ul className="list-disc grow-[2] space-y-3">
                     <li className="text-gray-700">

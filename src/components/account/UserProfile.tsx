@@ -10,10 +10,14 @@ export default function UserProfile() {
     return (
         <>
             <BannerContainer>
-                <h2 className="text-2xl text-gray-700">User Profile</h2>
+                <h2 className="px-4 text-2xl text-gray-700">User Profile</h2>
             </BannerContainer>
-            {!userStore.user?.isApproved && <NotApprovedBanner />}
-            <UserProfileForm />
+            {userStore.isLoggedIn && (
+                <>
+                    {!userStore.user?.isApproved && <NotApprovedBanner />}
+                    <UserProfileForm />
+                </>
+            )}
         </>
     );
 }

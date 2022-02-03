@@ -14,6 +14,7 @@ import { useStore } from './stores/store';
 import UserDashboard from './components/account/UserDashboard';
 import NotFound from './components/NotFound';
 import UserProfile from './components/account/UserProfile';
+import ProtectedRoute from './components/layout/PrivateRoute';
 
 function App() {
   const {commonStore, userStore} = useStore();
@@ -45,8 +46,10 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/jobs" element={<Jobs />} />
-          <Route path="/dashboard" element={<UserDashboard />} />
-          <Route path="/profile" element={<UserProfile />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<UserDashboard />} />
+            <Route path="/profile" element={<UserProfile />} />
+          </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
