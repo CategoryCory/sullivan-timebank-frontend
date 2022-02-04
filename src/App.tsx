@@ -11,9 +11,9 @@ import ModalContainer from './components/common/modals/ModalContainer';
 import { Slide, ToastContainer } from 'react-toastify';
 import LoadingComponent from './components/LoadingComponent';
 import { useStore } from './stores/store';
-import UserDashboard from './components/account/UserDashboard';
+import UserDashboard from './components/dashboard/UserDashboard';
 import NotFound from './components/NotFound';
-import UserProfile from './components/account/UserProfile';
+import UserProfile from './components/profile/UserProfile';
 import ProtectedRoute from './components/layout/PrivateRoute';
 
 function App() {
@@ -46,10 +46,10 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/jobs" element={<Jobs />} />
-          <Route element={<ProtectedRoute />}>
+          {/* <Route element={<ProtectedRoute />}> */}
             <Route path="/dashboard" element={<UserDashboard />} />
             <Route path="/profile" element={<UserProfile />} />
-          </Route>
+          {/* </Route> */}
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -3,6 +3,7 @@ import { Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import { CircularProgress } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import { toast } from "react-toastify";
 import * as Yup from "yup";
 import LoadingComponent from "../LoadingComponent";
 import { useStore } from '../../stores/store';
@@ -90,11 +91,12 @@ function UserProfileForm() {
             onSubmit={(values, { setErrors, setSubmitting }) => {
                 updateByEmail(userEmail, values).then(() => {
                     setUserProfile(values);
+                    toast.success("Your profile has been successfully updated.");
                 });
             }}
         >
             {formik => (
-                <Form className='container mx-auto px-4'>
+                <Form className='container mx-auto my-10 px-4'>
                     <div className='w-full mb-6 pb-6 flex flex-col border-b-2 border-gray-300 md:flex-row'>
                         <h4 className="text-gray-500 md:basis-1/3 md:flex-none lg:basis-1/4">
                             Personal information
