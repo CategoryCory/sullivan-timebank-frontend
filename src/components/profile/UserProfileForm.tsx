@@ -42,16 +42,22 @@ function UserProfileForm() {
         }
     }, [userEmail, getByEmail]);
 
-    // if (userEmail === "") {
-    //     return <Navigate to="/login" replace={true} />
-    // }
-
     if (loadingInitial || loading) return <LoadingComponent />;
 
     return (
         <Formik
             enableReinitialize
-            initialValues={userProfile}
+            initialValues={{
+                firstName: userProfile.firstName,
+                lastName: userProfile.lastName,
+                streetAddress: userProfile.streetAddress ?? "",
+                city: userProfile.city ?? "",
+                state: userProfile.state ?? "",
+                zipCode: userProfile.zipCode ?? "",
+                phoneNumber: userProfile.phoneNumber ?? "",
+                birthday: userProfile.birthday,
+                biography: userProfile.biography ?? "", 
+            }}
             validationSchema={Yup.object({
                 firstName: Yup
                             .string()
@@ -161,6 +167,7 @@ function UserProfileForm() {
                             <TextareaInput
                                 label="Additional Information"
                                 name="biography"
+                                maxLength={500}
                                 rows={4}
                             />
                         </div>

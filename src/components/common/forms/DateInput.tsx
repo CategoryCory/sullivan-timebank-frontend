@@ -19,6 +19,7 @@ export default function TextInput(props: Props) {
                 <DatePicker
                     {...props}
                     {...field}
+                    value={field.value === "0001-01-01T00:00:00" ? null : field.value}
                     onChange={(val) => setFieldValue(props.name, val)}
                     renderInput={({ inputRef, inputProps, InputProps }) => (
                         <div className='relative'>

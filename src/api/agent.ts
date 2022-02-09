@@ -2,6 +2,9 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { store } from "../stores/store";
 import { User, UserFormValues, UserProfile } from "../models/user";
+import { Job } from "../models/job";
+import { UserAverageRating } from "../models/userRating";
+import { TokenBalance } from "../models/tokenTransactions";
 
 const sleep = (delay: number) => {
     return new Promise(resolve => {
@@ -61,9 +64,25 @@ const Profile = {
     }
 }
 
+const Jobs = {
+    getAllJobs: () => requests.get<Job[]>("/jobs"),
+    getJobById: (id: string) => requests.get<Job>(`/jobs/${id}`),
+}
+
+const Ratings = {
+    getAverageRating: (userId: string) => requests.get<UserAverageRating>(`/userratings/${userId}`),
+}
+
+const TokenTransactions = {
+    getTotalTokens: (userId: string) => requests.get<TokenBalance>(`/tokentransactions/balance/${userId}`),
+}
+
 const agent = {
     Account,
     Profile,
+    Jobs,
+    Ratings,
+    TokenTransactions,
 }
 
 export default agent;
