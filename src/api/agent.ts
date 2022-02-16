@@ -5,12 +5,13 @@ import { User, UserFormValues, UserProfile } from "../models/user";
 import { Job } from "../models/job";
 import { UserAverageRating } from "../models/userRating";
 import { TokenBalance } from "../models/tokenTransactions";
+import { Skill } from "../models/skill";
 
-const sleep = (delay: number) => {
-    return new Promise(resolve => {
-        setTimeout(resolve, delay);
-    })
-};
+// const sleep = (delay: number) => {
+//     return new Promise(resolve => {
+//         setTimeout(resolve, delay);
+//     })
+// };
 
 axios.defaults.baseURL = "https://localhost:5001/api";
 
@@ -24,17 +25,17 @@ axios.interceptors.request.use(config => {
 })
 
 axios.interceptors.response.use(async response => {
-    await sleep(500);
+    // await sleep(500);
     return response;
 }, (error: AxiosError) => {
-    const { data, status, config } = error.response!;
+    const { data, status } = error.response!;
     switch (status) {
         case 400:
             if (typeof data === "string") {
                 toast.error(data);
             }
             break;
-        case 404:
+        case 401:
             toast.error("Unauthorized");
             break;
     }
@@ -56,11 +57,11 @@ const Account = {
 }
 
 const Profile = {
-    getProfileByEmail: (email: string) => {
-        return requests.get<UserProfile>(`/userprofile/${encodeURIComponent(email)}`);
+    getProfileById: (userId: string) => {
+        return requests.get<UserProfile>(`/userprofile/${userId}`);
     },
-    updateProfileByEmail: (email: string, userProfile: UserProfile) => {
-        return requests.put<UserProfile>(`/userprofile/${encodeURIComponent(email)}`, userProfile);
+    updateProfileById: (userId: string, userProfile: UserProfile) => {
+        return requests.put<UserProfile>(`/userprofile/${userId}`, userProfile);
     }
 }
 
@@ -77,12 +78,18 @@ const TokenTransactions = {
     getTotalTokens: (userId: string) => requests.get<TokenBalance>(`/tokentransactions/balance/${userId}`),
 }
 
+const Skills = {
+    getSkills: (searchString?: string) => requests.get<Skill[]>(`/userskills${searchString == null ? "" : `?searchString=${searchString}`}`),
+    addSkillRange: (skillsToAdd: Skill[]) => requests.post<Skill[]>("/userskills", skillsToAdd),
+}
+
 const agent = {
     Account,
     Profile,
     Jobs,
     Ratings,
     TokenTransactions,
+    Skills,
 }
 
 export default agent;

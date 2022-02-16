@@ -12,16 +12,16 @@ function UserDashboardBanner() {
     const [tokenTotal, setTokenTotal] = useState(0);
 
     useEffect(() => {
-        getAverageRating(userStore.user!.userId).then(avg => {
-            setAverageRating(avg!.averageRating);
-        })
-    }, [getAverageRating, userStore.user]);
-
-    useEffect(() => {
-        getTokenBalance(userStore.user!.userId).then(balance => {
-            setTokenTotal(balance!.currentBalance);
-        })
-    }, [getTokenBalance, userStore.user]);
+        if (userStore.user) {
+            getAverageRating(userStore.user!.userId).then(avg => {
+                setAverageRating(avg!.averageRating);
+            });
+    
+            getTokenBalance(userStore.user!.userId).then(balance => {
+                setTokenTotal(balance!.currentBalance);
+            });
+        }
+    }, [getAverageRating, getTokenBalance, userStore.user]);
 
     return (
         <section className='py-6 bg-gray-100'>

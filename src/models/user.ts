@@ -1,3 +1,5 @@
+import { Skill } from "./skill";
+
 export interface User {
     userId: string,
     username: string;
@@ -19,6 +21,7 @@ export interface UserProfile {
     phoneNumber: string;
     birthday: Date | null;
     biography: string;
+    skills: Skill[];
 }
 
 export interface UserFormValues {

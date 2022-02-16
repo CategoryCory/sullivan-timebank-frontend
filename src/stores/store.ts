@@ -5,6 +5,7 @@ import UserStore from "./userStore";
 import UserProfileStore from "./userProfileStore";
 import UserRatingStore from "./userRatingStore";
 import TokenTransactionsStore from "./tokenTransactionsStore";
+import SkillStore from "./skillStore";
 
 interface Store {
     commonStore: CommonStore;
@@ -13,6 +14,7 @@ interface Store {
     userProfileStore: UserProfileStore;
     userRatingStore: UserRatingStore;
     tokenTransactionsStore: TokenTransactionsStore;
+    skillStore: SkillStore;
 }
 
 export const store: Store = {
@@ -22,6 +24,7 @@ export const store: Store = {
     userProfileStore: new UserProfileStore(),
     userRatingStore: new UserRatingStore(),
     tokenTransactionsStore: new TokenTransactionsStore(),
+    skillStore: new SkillStore(),
 };
 
 export const StoreContext = createContext(store);

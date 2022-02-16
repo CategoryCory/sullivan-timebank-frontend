@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
+// import { Skill } from "../models/skill";
 import { UserProfile } from "../models/user";
 
 export default class UserProfileStore {
@@ -16,13 +17,13 @@ export default class UserProfileStore {
         this.loadingInitial = state;
     }
 
-    getByEmail = async (email: string) => {
+    getUserById = async (userId: string) => {
         // if (this.userProfile != null) {
         //     return this.userProfile;
         // } else {
             this.setLoadingInitial(true);
             try {
-                const userProfile = await agent.Profile.getProfileByEmail(email);
+                const userProfile = await agent.Profile.getProfileById(userId);
                 runInAction(() => this.userProfile = userProfile);
                 this.setLoadingInitial(false);
                 return userProfile;
@@ -33,17 +34,18 @@ export default class UserProfileStore {
         // }
     }
 
-    updateByEmail = async (email: string, userProfile: UserProfile) => {
+    updateUserById = async (userId: string, userProfile: UserProfile) => {
         this.loading = true;
         try {
-            await agent.Profile.updateProfileByEmail(email, userProfile);
+            // Update user profile
+            await agent.Profile.updateProfileById(userId, userProfile);
             runInAction(() => {
                 this.userProfile = userProfile;
                 this.editMode = false;
                 this.loading = false;
             });
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error(error.response);
             runInAction(() => this.loading = false);
         }
     }

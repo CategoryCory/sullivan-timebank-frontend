@@ -4,17 +4,27 @@ import { observer } from 'mobx-react-lite';
 import { CircularProgress } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
+import { v4 as uuidv4 } from 'uuid';
 import * as Yup from "yup";
+import slugify from "../../helpers/slugify";
 import LoadingComponent from "../LoadingComponent";
 import { useStore } from '../../stores/store';
+import agent from '../../api/agent';
 import DateInput from '../common/forms/DateInput';
 import TextareaInput from '../common/forms/TextareaInput';
 import TextInput from '../common/forms/TextInput';
 import { UserProfile } from '../../models/user';
 
+import MultiSelectInput from '../common/forms/MultiSelectInput';
+import { Skill } from '../../models/skill';
+import { OptionType } from '../../models/options';
+
 function UserProfileForm() {
-    const { userStore, userProfileStore } = useStore();
-    const { getByEmail, updateByEmail, loadingInitial, loading } = userProfileStore;
+    const { userStore, userProfileStore, skillStore } = useStore();
+    const { getUserById, updateUserById, loadingInitial, loading } = userProfileStore;
+    const [skillOptions, setSkillOptions] = useState<OptionType[]>([]);
+    const [currentSelections, setCurrentSelections] = useState<OptionType[]>([]);
+    const [multiSelectKey, setMultiSelectKey] = useState("");
     const [userProfile, setUserProfile] = useState<UserProfile>({
         firstName: "",
         lastName: "",
@@ -26,21 +36,43 @@ function UserProfileForm() {
         phoneNumber: "",
         birthday: null,
         biography: "",
+        skills: Array<Skill>(),
     });
     
-    let userEmail = "";
+    let userId = "";
 
-    if (userStore.user && userStore.user.email) {
-        userEmail = userStore.user.email;
+    if (userStore.user && userStore.user.userId) {
+        userId = userStore.user.userId;
     }
+    
+    useEffect(() => {
+        agent.Skills.getSkills().then(skills => {
+            setSkillOptions([]);
+
+            Array.from(skills).forEach(skill => {
+                const skillOptionValue = `${skill.userSkillId!}.${skill.skillNameSlug!}`;
+                const skillToAdd = { value: skillOptionValue, label: skill.skillName };
+                setSkillOptions(existing => [...existing, skillToAdd]);
+            });
+        });
+    }, []);
 
     useEffect(() => {
-        if (userEmail !== "") {
-            getByEmail(userEmail).then(profile => {
+        if (userId !== "") {
+            getUserById(userId).then(profile => {
                 setUserProfile(profile!);
+
+                setCurrentSelections([]);
+
+                profile!.skills.forEach(skill => {
+                    const skillOptionValue = `${skill.userSkillId!}.${skill.skillNameSlug!}`;
+                    setCurrentSelections(existing => [...existing, { value: skillOptionValue, label: skill.skillName }]);
+                });
+                
+                setMultiSelectKey(uuidv4());
             });
         }
-    }, [userEmail, getByEmail]);
+    }, [userId, getUserById]);
 
     if (loadingInitial || loading) return <LoadingComponent />;
 
@@ -57,6 +89,7 @@ function UserProfileForm() {
                 phoneNumber: userProfile.phoneNumber ?? "",
                 birthday: userProfile.birthday,
                 biography: userProfile.biography ?? "", 
+                skills: userProfile.skills ?? new Array<Skill>(),
             }}
             validationSchema={Yup.object({
                 firstName: Yup
@@ -85,6 +118,7 @@ function UserProfileForm() {
                             .required("Please enter your zip code."),
                 phoneNumber: Yup
                             .string()
+                            .required()
                             .max(25, "Phone number cannot be greater than 25 characters."),
                 birthday: Yup
                             .date()
@@ -94,11 +128,31 @@ function UserProfileForm() {
                             .string()
                             .max(500, "Biography cannot be greater than 500 characters."),
             })}
-            onSubmit={(values, { setErrors, setSubmitting }) => {
-                updateByEmail(userEmail, values).then(() => {
-                    setUserProfile(values);
-                    toast.success("Your profile has been successfully updated.");
-                });
+            onSubmit={ async (values, { setErrors, setSubmitting }) => {
+                try {
+                    // Create array of Skills from currentSelections
+                    const currentUserSkills = currentSelections.map(selection => ({
+                            userSkillId: selection.__isNew__ ? uuidv4() : selection.value.split(".")[0],
+                            skillName: selection.label,
+                            skillNameSlug: selection.__isNew__ ? slugify(selection.label) : selection.value.split(".")[1],
+                            isNew: selection.__isNew__ ?? false,
+                        } as Skill
+                    ));
+
+                    // Add new skills to database
+                    const newSkills = currentUserSkills.filter(skill => skill.isNew != null && skill.isNew !== false)
+                    await skillStore.addSkills(newSkills);
+
+                    // Update profile data
+                    values.skills = currentUserSkills;
+                    updateUserById(userId, values).then(() => {
+                        setUserProfile(values);
+                        toast.success("Your profile has been successfully updated.");
+                    });
+                } catch (error) {
+                    toast.error("There was an error updating your profile.");
+                    setSubmitting(false);
+                }
             }}
         >
             {formik => (
@@ -164,6 +218,14 @@ function UserProfileForm() {
                             Skills Description
                         </h4>
                         <div className='space-y-6 md:basis-2/3 md:flex-none lg:basis-3/4'>
+                            <MultiSelectInput
+                                key={multiSelectKey}
+                                name='skills'
+                                label='Skills'
+                                options={skillOptions}
+                                currentSelections={currentSelections}
+                                onSelectionChange={setCurrentSelections}
+                            />
                             <TextareaInput
                                 label="Additional Information"
                                 name="biography"
@@ -176,7 +238,7 @@ function UserProfileForm() {
                         <button
                             type="submit"
                             className={formik.isSubmitting ? "form-button-disabled" : "form-button"}
-                            disabled={formik.isSubmitting || userEmail === ""}
+                            disabled={formik.isSubmitting || userId === ""}
                         >
                             {formik.isSubmitting 
                                     ? <CircularProgress size={16} sx={{ color: "#fff" }} /> 
