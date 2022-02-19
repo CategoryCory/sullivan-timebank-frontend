@@ -222,6 +222,7 @@ function UserProfileForm() {
                                 key={multiSelectKey}
                                 name='skills'
                                 label='Skills'
+                                isMultiSelect
                                 options={skillOptions}
                                 currentSelections={currentSelections}
                                 onSelectionChange={setCurrentSelections}

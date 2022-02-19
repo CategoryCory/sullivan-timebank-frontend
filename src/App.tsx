@@ -15,6 +15,7 @@ import UserDashboard from './components/dashboard/UserDashboard';
 import NotFound from './components/NotFound';
 import UserProfile from './components/profile/UserProfile';
 import ProtectedRoute from './components/layout/PrivateRoute';
+import AddJob from './components/dashboard/AddJob';
 
 function App() {
   const {commonStore, userStore} = useStore();
@@ -40,16 +41,17 @@ function App() {
       />
       <ModalContainer />
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
         <Route element={<Layout />}>
           <Route path="/" element={<Homepage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/jobs" element={<Jobs />} />
-          {/* <Route element={<ProtectedRoute />}> */}
-            <Route path="/dashboard" element={<UserDashboard />} />
-            <Route path="/profile" element={<UserProfile />} />
-          {/* </Route> */}
+          <Route path="about" element={<AboutPage />} />
+          <Route path="jobs" element={<Jobs />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<UserDashboard />} />
+            <Route path="dashboard/add-job" element={<AddJob />} />
+            <Route path="profile" element={<UserProfile />} />
+          </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

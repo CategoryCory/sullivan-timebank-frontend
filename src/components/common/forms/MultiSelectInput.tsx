@@ -7,6 +7,7 @@ import { OptionType } from '../../../models/options';
 interface Props {
     label: string;
     name: string;
+    isMultiSelect?: true | undefined;
     options: Array<OptionType>;
     currentSelections: Array<OptionType>;
     onSelectionChange: (selections: OptionType[]) => void;
@@ -43,7 +44,7 @@ export default function MultiSelectInput(props: Props) {
             <label htmlFor={props.name} className="block mb-2">{props.label}</label>
             <CreatableSelect
                 name={field.name}
-                isMulti
+                isMulti={props.isMultiSelect}
                 isClearable
                 options={props.options}
                 defaultValue={props.currentSelections}

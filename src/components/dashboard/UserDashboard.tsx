@@ -11,11 +11,11 @@ export default function UserDashboard() {
   return (
     <>
       <UserDashboardBanner />
-      {isApproved ? 
-        <UserDashboardTableContainer />
-        : 
-        <NotApprovedDashboard />
-      }
+        {isApproved ? 
+          <UserDashboardTableContainer />
+          : 
+          <NotApprovedDashboard />
+        }
     </>
   )
 }

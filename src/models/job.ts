@@ -10,3 +10,9 @@ export interface Job {
     createdById?: string;
     createdBy?: string;
 }
+
+export interface JobCategory {
+    jobCategoryId: number;
+    jobCategoryName: string;
+    jobCategorySlug: string;
+}

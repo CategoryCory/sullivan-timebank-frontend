@@ -4,7 +4,7 @@ import personAtDeskPic from "../../images/person-at-desk.jpg";
 
 export default function NotApprovedDashboard() {
     return (
-        <div className="mt-20 text-center">
+        <div className="text-center">
             <h2 className="mb-8 text-4xl">Your registration is pending approval.</h2>
             <p className="mb-4 text-lg">It shouldn't take more than a couple of days.</p>
             <p className='text-lg'>Meanwhile, please&nbsp;
