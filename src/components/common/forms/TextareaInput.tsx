@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useField } from 'formik';
+import { ErrorMessage, Field, useField } from 'formik';
 
 interface Props {
     label: string;
@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function TextareaInput(props: Props) {
-    const [field, meta] = useField(props.name);
+    const [field] = useField(props.name);
     const [letterCount, setLetterCount] = useState(0);
 
     useEffect(() => {
@@ -21,19 +21,22 @@ export default function TextareaInput(props: Props) {
     return (
         <div>
             <label htmlFor={props.name} className="block mb-2">{props.label}</label>
-            <textarea
+            <Field
                 {...field}
                 {...props}
+                as='textarea'
                 rows={props.rows}
                 className="w-full px-4 py-2 rounded border-2 border-slate-400 focus:ring-0 
                     focus:border-indigo-600 transition duration-150"
             />
             <p className={`text-slate-400 text-right ${letterCount > props.maxLength ? 'text-red-500' : ''}`}>
-                {letterCount} / {props.maxLength}
+                Characters used: {letterCount} / {props.maxLength}
             </p>
-            {meta.touched && meta.error ? (
-                <p className="mt-1 text-red-600">{meta.error}</p>
-            ) : null}
+            <ErrorMessage
+                name={props.name}
+                component='p'
+                className='mt-1 text-red-600'
+            />
         </div>
     );
 }

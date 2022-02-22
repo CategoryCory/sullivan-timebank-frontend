@@ -1,7 +1,7 @@
 import React from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { useField, useFormikContext } from 'formik';
+import { ErrorMessage, useField, useFormikContext } from 'formik';
 
 interface Props {
     label: string;
@@ -34,6 +34,11 @@ export default function TextInput(props: Props) {
                             </div>
                         </div>
                     )}
+                />
+                <ErrorMessage
+                    name={props.name}
+                    component='p'
+                    className='mt-2 text-red-600'
                 />
             </LocalizationProvider>   
         </div>

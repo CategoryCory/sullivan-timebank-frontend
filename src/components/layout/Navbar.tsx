@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AppBar, Avatar, Container, IconButton, ListItemIcon, Menu, MenuItem, Stack, Toolbar } from '@mui/material';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import AddIcon from '@mui/icons-material/Add';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { toast } from "react-toastify";
 import { useStore } from "../../stores/store";
@@ -128,6 +129,12 @@ export default function Navbar() {
                                                     <DashboardIcon fontSize="small" sx={{ color: "#6B7280" }} />
                                                 </ListItemIcon>
                                                 <Link to="/dashboard" className="font-sans text-gray-600">Dashboard</Link>
+                                            </MenuItem>
+                                            <MenuItem>
+                                                <ListItemIcon>
+                                                    <AddIcon fontSize="small" sx={{ color: "#6B7280" }} />
+                                                </ListItemIcon>
+                                                <Link to="/dashboard/add-job" className="font-sans text-gray-600">Add New Job</Link>
                                             </MenuItem>
                                             <MenuItem>
                                                 <ListItemIcon>

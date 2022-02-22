@@ -1,15 +1,19 @@
 import React from 'react';
 import Select, { StylesConfig } from "react-select";
+import { ErrorMessage, useFormikContext } from 'formik';
 import { OptionType } from '../../../models/options';
 
 interface Props {
-    label: string;
     name: string;
+    label?: string;
+    placeholder?: string;
     options: OptionType[];
-    onSelectionChange: (selection: OptionType) => void;
+    onSelectionChange?: (selection: OptionType) => void;
 }
 
 export default function SingleSelectInput(props: Props) {
+    const formikProps = useFormikContext();
+
     const customStyles: StylesConfig<OptionType, false> = {
         option: (provided, state) => ({
             ...provided,
@@ -23,7 +27,7 @@ export default function SingleSelectInput(props: Props) {
         }),
         control: (provided, state) => ({
             ...provided,
-            padding: "0.2rem 0.4rem",
+            padding: "0.15rem 0.4rem",
             border: state.isFocused ? "2px solid rgb(79 70 229)" : "2px solid rgb(148 163 184)",
             borderRadius: "0.25rem",
             boxShadow: state.isFocused ? "none" : "none",
@@ -35,18 +39,18 @@ export default function SingleSelectInput(props: Props) {
 
     return (
         <div>
-            <label htmlFor={props.name} className="block mb-2">{props.label}</label>
+            {props.label && <label htmlFor={props.name} className="block mb-2">{props.label}</label>}
             <Select
                 name={props.name}
+                placeholder={props.placeholder}
                 styles={customStyles}
                 options={props.options}
-                onChange={(opt, meta) => {
-                    const option = {
-                        value: opt!.value,
-                        label: opt!.label
-                    }
-                    props.onSelectionChange(option)
-                }}
+                onChange={option => formikProps.setFieldValue(props.name, option?.value)}
+            />
+            <ErrorMessage
+                name={props.name}
+                component='p'
+                className='mt-1 text-red-600'
             />
         </div>
     )
