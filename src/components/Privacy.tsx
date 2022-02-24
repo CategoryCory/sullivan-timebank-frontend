@@ -1,0 +1,186 @@
+import React from 'react';
+
+export default function Privacy() {
+    return (
+        <article className="max-w-4xl mx-auto mt-14 mb-8 prose lg:prose-lg">
+            <h1>TimeBank <span className='text-indigo-600'>Privacy Policy</span></h1>
+            <p>
+                This privacy policy has been compiled to better serve those who are concerned with how their&nbsp;
+                <strong>Personally Identifiable Information</strong> (PII); is being used online. PII, as used in US privacy
+                law and information security, is information that can be used on its own or with other information to
+                identify, contact, or locate a single person, or to identify an individual in context. Please read our
+                privacy policy carefully to get a clear understanding of how we collect, use, protect or otherwise handle
+                your <strong>Personally Identifiable Information</strong> in accordance with our website.
+            </p>
+            <h3>What personal information do we collect?</h3>
+            <p>
+                When registering on our site, you may be asked to enter your name, email
+                address, phone number, or other details to help you with your experience. TimeBank members
+                supply information about what they can do for others, their availability, and other
+                matters that can help their timebank enlist them in building communities.
+            </p>
+            <h3>When do we collect information?</h3>
+            <p>
+                We collect information from you when you register on our site, fill out a form or enter information on our
+                site.
+            </p>
+            <h3>How do we use your information?</h3>
+            <p>
+                We may use the information we collect from you when you register, sign up for our
+                newsletter, respond to a survey or marketing communication, surf the website, or use certain other site
+                features in the following ways:
+                <ul>
+                    <li>
+                        To personalize user's experience and to allow us to deliver the type of content and product
+                        offerings in which you are most interested.
+                    </li>
+                    <li>
+                        To allow us to better service you in responding to your customer service requests.
+                    </li>
+                    <li>
+                        To administer a contest, promotion, survey or other site feature.
+                    </li>
+                    <li>
+                        To quickly process your transactions.
+                    </li>
+                    <li>
+                        To make matches, to respond to your requests for help, to organize events.
+                    </li>
+                </ul>
+            </p>
+            <h3>How do we protect visitor information?</h3>
+            <p>We do not use vulnerability scanning and/or scanning to PCI standards.</p>
+            <p>
+                Your personal information is contained behind secured networks and is only accessible by a limited number
+                of persons who have special access rights to such systems, and are required to keep the information
+                confidential. In addition, all sensitive/credit information you supply is encrypted via Secure Socket Layer
+                (SSL) technology.
+            </p>
+            <h3>Do we use "cookies"?</h3>
+            <p>
+                Yes. Cookies are small pieces of information that a site or its service provider saves to your computer's
+                hard drive through your Web browser (if you allow) that enables the site's or service provider's systems to
+                recognize your browser and capture and remember certain information. For instance, we use cookies to help us
+                remember and process who is logged into the TimeBank. They are also used to help us understand your
+                preferences based on previous or current site activity, which enables us to provide you with improved
+                services. We also use cookies to help us compile aggregate data about site traffic and site interaction so
+                that we can offer better site experiences and tools in the future.
+            </p>
+            <p>
+                We use cookies to:
+                <ul>
+                    <li>
+                        Compile aggregate data about site traffic and site interactions in order to offer better site
+                        experiences and tools in the future. We may also use trusted third party services that track this
+                        information on our behalf.
+                    </li>
+                </ul>
+            </p>
+            <p>
+                You can choose to have your computer warn you each time a cookie is being sent, or you can choose to turn
+                off all cookies. You do this through your browser (like Internet Explorer) settings. Each browser is a
+                little different, so look at your browser's Help menu to learn the correct way to modify your cookies.
+            </p>
+            <p>
+                Cookies help make your site experience more efficient. If you disable cookies, some features will be 
+                disabled, and our services may not function properly.
+            </p>
+            <h3>Email Communication</h3>
+            <p>
+                You may receive e-mails from the Sullivan TimeBank and its Affiliates. You can discontinue these e-mails at
+                any time by clicking on the "unsubscribe" link within an email you have received or you may notify us of
+                your desire to unsubscribe at admin@sullivantimebank.org. Please allow an appropriate amount of time for us to
+                process your request and to update our internal records.
+            </p>
+            <h3>Third Party Disclosure</h3>
+            <p>
+                We do not sell, trade, or otherwise transfer to outside parties your personally identifiable information
+                unless we provide you with advance notice. This does not include website hosting partners and other parties
+                who assist us in operating our website, conducting our business, or servicing you, so long as those parties
+                agree to keep this information confidential. We may also release your information when we believe release is
+                appropriate to comply with the law, enforce our site policies, or protect ours or others' rights, property,
+                or safety. However, non-personally identifiable visitor information may be provided to other parties for
+                marketing, advertising, or other uses.
+            </p>
+            <h3>Third party links</h3>
+            <p>
+                Occasionally, at our discretion, we may include or offer third party products or services on our website.
+                These third party sites have separate and independent privacy policies. We therefore have no responsibility
+                or liability for the content and activities of these linked sites. Nonetheless, we seek to protect the
+                integrity of our site and welcome any feedback about these sites.
+            </p>
+            <h3>How do we respond to legal requests or prevent harm?</h3>
+            <p>
+                We access, preserve and share your information with regulators, law enforcement or others:
+                <ul>
+                    <li>
+                        In response to a legal request (like a search warrant, court order or subpoena) if we have a good
+                        faith belief that the law requires us to do so. This may include responding to legal requests from
+                        jurisdictions outside of the United States when we have a good-faith belief that the response is
+                        required by law in that jurisdiction, affects users in that jurisdiction, and is consistent with
+                        internationally recognized standards.
+                    </li>
+                    <li>
+                        When we have a good-faith belief it is necessary to: detect, prevent and address fraud, violations
+                        of our terms or policies, or other harmful or illegal activity; to protect ourselves (including our
+                        rights and property), you or others, including as part of investigations or regulatory inquiries;
+                        or to prevent death or imminent bodily harm. For example, if relevant, we provide information to and
+                        receive information from third-party partners about the reliability of your account to prevent
+                        fraud, abuse and other harmful activity on and off our TimeBank.
+                    </li>
+                </ul>
+                Information we receive about you can be accessed and preserved for an extended period when it is the subject
+                of a legal request or obligation, governmental investigation, or investigations of possible violations of
+                our terms or policies, or otherwise to prevent harm. We also retain information from accounts disabled for
+                terms violations for at least a year to prevent repeat abuse or other term violations.
+            </p>
+            <h3>Protection of Our Business and of Others</h3>
+            <p>
+                Anything in this Privacy Policy, Terms of Service, or elsewhere to the contrary notwithstanding, we may use
+                or disclose information you provide to us, including personally identifiable information, if we believe such
+                use or disclosure is necessary or appropriate (i) to comply with applicable law, including without
+                limitation an order issued by a court or other tribunal of competent jurisdiction, (ii) to enforce our
+                rights, including without limitation rights we have under this Privacy Policy and Terms of Service, or (iii)
+                to protect the integrity of the TimeBank, and the safety of our users and the general public.
+            </p>
+            <h3>COPPA (Children Online Privacy Protection Act)</h3>
+            <p>
+                We are committed to protecting children's privacy on the Internet and comply fully with the Children's
+                Online Privacy Protection Act (COPPA). We do not knowingly allow individuals under the age of
+                eighteen (18) to use or otherwise access the TimeBank unless they are under the direct supervision of an
+                adult.
+            </p>
+            <h3>Fair Information Practices</h3>
+            <p>
+                The Fair Information Practices Principles form the backbone of privacy law in the United States and the
+                concepts they include have played a significant role in the development of data protection laws around the
+                globe. Understanding the Fair Information Practice Principles and how they should be implemented is critical
+                to comply with the various privacy laws that protect personal information.
+            </p>
+            <p>
+                In order to be in line with Fair Information Practices we will take the following responsive action, should
+                a data breach occur:
+                <ul>
+                    <li>We will notify the users via email within 1 business day</li>
+                </ul>
+            </p>
+            <p>
+                We also agree to the individual redress principle, which requires that individuals have a right to pursue
+                legally enforceable rights against data collectors and processors who fail to adhere to the law. This
+                principle requires not only that individuals have enforceable rights against data users, but also that
+                individuals have recourse to courts or a government agency to investigate and/or prosecute non-compliance by
+                data processors.
+            </p>
+            <h3>Contacting Us</h3>
+            <p>
+                If there are any questions regarding this privacy policy you may contact us using the information below:
+            </p>
+            <p>
+                Algernon Sydney Sullivan Foundation<br />
+                P.O. Box 1113<br />
+                Oxford, MS 38655<br />
+                admin@sullivantimebank.org
+            </p>
+        </article>
+    )
+}

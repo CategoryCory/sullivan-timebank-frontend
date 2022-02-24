@@ -16,18 +16,33 @@ import MaterialSelectInput from '../common/forms/MaterialSelectInput';
 import DateInput from '../common/forms/DateInput';
 import TextInput from '../common/forms/TextInput';
 
-export default function AddJobForm() {
+interface Props {
+    currentDisplayId: string;
+}
+
+export default function JobForm(props: Props) {
     const [showCustomSchedule, setShowCustomSchedule] = useState(false);
     const [jobCategories, setJobCategories] = useState<JobCategory[]>([]);
-    let navigate = useNavigate();
-    // const [currentCategory, setCurrentCategory] = useState<OptionType>({
-    //     label: "",
-    //     value: ""
-    // });
+    const [jobDetails, setJobDetails] = useState<Job>({
+        displayId: "",
+        jobName: "",
+        jobCategory: "",
+        expiresOn: new Date(),
+        description: "",
+        jobScheduleType: "Open",
+        jobSchedules: [
+            {
+                dayOfWeek: "",
+                timeBegin: undefined,
+                timeEnd: undefined,
+            } as JobCustomSchedule
+        ],
+    })
+    const navigate = useNavigate();
 
-    const jobScheduleType = [
-        { id: 'open', title: 'Open Availability' },
-        { id: 'custom', title: 'Custom Schedule' },
+    const scheduleTypes = [
+        { id: 'Open', title: 'Open Availability' },
+        { id: 'Custom', title: 'Custom Schedule' },
     ];
 
     const daysOfWeek: NumberOptionType[] = [
@@ -67,15 +82,7 @@ export default function AddJobForm() {
         { value: 1830, label: "6:30 PM" },
         { value: 1900, label: "7:00 PM" },
     ]
-
-    // const handleCategorySelection = (opt: OptionType) => {
-    //     setCurrentCategory(opt);
-    // };
-
-    const handleCustomScheduleChanged = (state: boolean) => {
-        setShowCustomSchedule(state);
-    } 
-
+    
     useEffect(() => {
         axios.get<JobCategory[]>("/jobcategories")
             .then(res => {
@@ -83,26 +90,34 @@ export default function AddJobForm() {
             })
             .catch(error => {
                 console.error(error);
-            })
+            });
     }, []);
 
+    useEffect(() => {
+        if (props.currentDisplayId != null && props.currentDisplayId !== "") {
+            axios.get<Job>(`/jobs/${props.currentDisplayId}`)
+                .then(res => {
+                    if (res.data.jobScheduleType === "Custom") {
+                        setShowCustomSchedule(true);
+                    }
+                    setJobDetails(res.data);
+                    console.log(res.data);
+                })
+                .catch(error => {
+                    toast.error("An error occurred while fetching this job.");
+                    console.log(error);
+                })
+        }
+    }, [props.currentDisplayId]);
+    
+    const handleCustomScheduleChanged = (state: boolean) => {
+        setShowCustomSchedule(state);
+    } 
+            
     return (
         <Formik
             enableReinitialize
-            initialValues={{
-                jobName: "",
-                jobCategory: "",
-                expiresOn: new Date().toISOString().slice(0, 10),
-                jobDescription: "",
-                scheduleType: "open",
-                jobCustomSchedules: [
-                    {
-                        dayOfWeek: "",
-                        timeBegin: undefined,
-                        timeEnd: undefined,
-                    } as JobCustomSchedule
-                ],
-            }}
+            initialValues={jobDetails}
             validationSchema={Yup.object({
                 jobName: Yup.string().required("Please enter a name for this job."),
                 jobCategory: Yup.string().required("Please select a category for this job."),
@@ -110,13 +125,13 @@ export default function AddJobForm() {
                             .date()
                             .required("Please enter an expiration date for this job.")
                             .min(new Date().toISOString().slice(0, 10), "Expiration date must be later than today."),
-                jobDescription: Yup
+                description: Yup
                                 .string()
                                 .max(250, "The description cannot be greater than 250 characters.")
                                 .required("Please enter a description for this job."),
-                scheduleType: Yup.string(),
-                jobCustomSchedules: Yup.array().when('scheduleType', {
-                    is: "custom",
+                jobScheduleType: Yup.string(),
+                jobSchedules: Yup.array().when('jobScheduleType', {
+                    is: "Custom",
                     then: Yup.array().of(
                         Yup.object({
                             dayOfWeek: Yup.string().required("Please enter a day."),
@@ -128,21 +143,17 @@ export default function AddJobForm() {
                 })
             })}
             onSubmit={ async (values, { setErrors, setSubmitting }) => {
-                // console.log(values);
-
                 const jobToAdd: Job = {
                     displayId: uuidv4(),
                     jobName: values.jobName,
-                    description: values.jobDescription,
-                    jobScheduleType: values.scheduleType,
+                    description: values.description,
+                    jobScheduleType: values.jobScheduleType,
                     expiresOn: new Date(values.expiresOn),
-                    jobCategoryId: parseInt(values.jobCategory, 10),
-                    jobSchedules: values.jobCustomSchedules.filter(jobSchedule => (
+                    jobCategoryId: parseInt(values.jobCategory!, 10),
+                    jobSchedules: values.jobSchedules ? values.jobSchedules.filter(jobSchedule => (
                         jobSchedule.dayOfWeek !== "" && jobSchedule.timeBegin != null && jobSchedule.timeEnd != null
-                    )),
+                    )) : new Array<JobCustomSchedule>(),
                 };
-
-                console.log(jobToAdd);
 
                 axios.post<Job>('/jobs', jobToAdd)
                     .then(response => {
@@ -151,25 +162,15 @@ export default function AddJobForm() {
                     })
                     .catch(err => {
                         console.error(err);
+                        setSubmitting(false);
                     });
             }}
         >
             {formik => (
                 <Form className='container mx-auto my-10 px-4'>
                     <div className='w-full mb-6 pb-6 flex flex-col border-b-2 border-gray-300 md:flex-row'>
-                        <div className="md:basis-1/3 md:flex-none lg:basis-1/4"></div>
-                        <div className='md:basis-2/3 md:flex-none lg:basis-3/4'>
-                            <p className='text-lg text-gray-700'>
-                                Fill out the form below to create a new job. 
-                            </p>
-                            <p className='text-sm text-gray-500 leading-5'>
-                                Select a category for the job, add a brief description of the job, and choose a schedule type.
-                            </p>
-                        </div>
-                    </div>
-                    <div className='w-full mb-6 pb-6 flex flex-col border-b-2 border-gray-300 md:flex-row'>
                         <div className="md:basis-1/3 md:flex-none lg:basis-1/4">
-                            <h3 className='font-bold font-sans text-xl text-gray-700'>Job Detail</h3>
+                            <h3 className='font-bold font-sans text-xl text-gray-700'>Job Details</h3>
                         </div>
                         <div className='space-y-6 md:basis-2/3 md:flex-none lg:basis-3/4'>
                             <div className='grid grid-cols-1'>
@@ -181,6 +182,7 @@ export default function AddJobForm() {
                             </div>
                             <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
                                 <SingleSelectInput
+                                    key={formik.values.jobCategoryId}
                                     label='Job Category'
                                     name='jobCategory'
                                     options={jobCategories.map(category => (
@@ -189,7 +191,10 @@ export default function AddJobForm() {
                                             value: category.jobCategoryId.toString(),
                                         } as OptionType
                                     ))}
-                                    // currentSelections={[currentCategory]}
+                                    currentSelection={{
+                                        label: formik.values.jobCategory ?? "",
+                                        value: formik.values.jobCategoryId?.toString() ?? ""
+                                    } as OptionType }
                                     // onSelectionChange={handleCategorySelection}
                                 />
                                 <DateInput
@@ -200,7 +205,7 @@ export default function AddJobForm() {
                             <div className='grid grid-cols-1'>
                                 <TextareaInput
                                     label='Job Description'
-                                    name='jobDescription'
+                                    name='description'
                                     rows={4}
                                     maxLength={250}
                                 />
@@ -220,18 +225,18 @@ export default function AddJobForm() {
                                 <fieldset className='mt-4'>
                                     <legend className='sr-only'>Schedule Type</legend>
                                     <div className='space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10'>
-                                        {jobScheduleType.map(scheduleType => (
+                                        {scheduleTypes.map(scheduleType => (
                                             <div key={scheduleType.id} className='flex items-center'>
                                                 <Field
                                                     id={scheduleType.id}
-                                                    name='scheduleType'
+                                                    name='jobScheduleType'
                                                     type='radio'
-                                                    checked={formik.values.scheduleType === scheduleType.id}
-                                                    // defaultChecked={scheduleType.id === 'open'}
+                                                    value={scheduleType.id}
+                                                    checked={formik.values.jobScheduleType === scheduleType.id}
                                                     onChange={() => {
-                                                        const isCustom = scheduleType.id === 'custom';
+                                                        const isCustom = scheduleType.id === 'Custom';
                                                         handleCustomScheduleChanged(isCustom);
-                                                        formik.setFieldValue('scheduleType', scheduleType.id)
+                                                        formik.setFieldValue('jobScheduleType', scheduleType.id)
                                                     }}
                                                     className='h-4 w-4 text-indigo-700 border-gray-300 focus:ring-indigo-500
                                                     transition duration-100'
@@ -244,58 +249,58 @@ export default function AddJobForm() {
                                     </div>
                                 </fieldset>
                                 <div className={showCustomSchedule ? '' : 'hidden'}>
-                                    <FieldArray name="jobCustomSchedules">
+                                    <FieldArray name="jobSchedules">
                                         {({ insert, remove, push }) => (
                                             <div className='mt-6 flex flex-col'>
-                                                {formik.values.jobCustomSchedules.length > 0 &&
-                                                    formik.values.jobCustomSchedules.map((customSchedule, index) => (
+                                                {(formik.values.jobSchedules && formik.values.jobSchedules!.length > 0) &&
+                                                    formik.values.jobSchedules.map((jobSchedule, index) => (
                                                         <div 
                                                             key={index}
                                                             className='mb-4 grid items-center gap-3 grid-cols-1 lg:grid-cols-4 lg:gap-4'
                                                         >
                                                             <div className='flex flex-col'>
                                                                 <MaterialSelectInput
-                                                                    name={`jobCustomSchedules.${index}.dayOfWeek`}
+                                                                    name={`jobSchedules.${index}.dayOfWeek`}
                                                                     label="Day of Week"
-                                                                    initialValue={customSchedule.dayOfWeek}
+                                                                    initialValue={jobSchedule.dayOfWeek}
                                                                     options={daysOfWeek}
                                                                 />
                                                                 <ErrorMessage
-                                                                    name={`jobCustomSchedules.${index}.dayOfWeek`}
+                                                                    name={`jobSchedules.${index}.dayOfWeek`}
                                                                     component='p'
                                                                     className='mt-1 text-red-600'
                                                                 />
                                                             </div>
                                                             <div className='flex flex-col'>
                                                                 <MaterialSelectInput
-                                                                    name={`jobCustomSchedules.${index}.timeBegin`}
+                                                                    name={`jobSchedules.${index}.timeBegin`}
                                                                     label="From"
                                                                     initialValue={
-                                                                        customSchedule.timeBegin ?
-                                                                        customSchedule.timeBegin.toString() :
+                                                                        jobSchedule.timeBegin ?
+                                                                        jobSchedule.timeBegin.toString() :
                                                                         ""
                                                                     }
                                                                     options={timesOfDay}
                                                                 />
                                                                 <ErrorMessage
-                                                                    name={`jobCustomSchedules.${index}.timeBegin`}
+                                                                    name={`jobSchedules.${index}.timeBegin`}
                                                                     component='p'
                                                                     className='mt-1 text-red-600'
                                                                 />
                                                             </div>
                                                             <div className='flex flex-col'>
                                                                 <MaterialSelectInput
-                                                                    name={`jobCustomSchedules.${index}.timeEnd`}
+                                                                    name={`jobSchedules.${index}.timeEnd`}
                                                                     label="To"
                                                                     initialValue={
-                                                                        customSchedule.timeEnd ?
-                                                                        customSchedule.timeEnd.toString() :
+                                                                        jobSchedule.timeEnd ?
+                                                                        jobSchedule.timeEnd.toString() :
                                                                         ""
                                                                     }
                                                                     options={timesOfDay}
                                                                 />
                                                                 <ErrorMessage
-                                                                    name={`jobCustomSchedules.${index}.timeEnd`}
+                                                                    name={`jobSchedules.${index}.timeEnd`}
                                                                     component='p'
                                                                     className='mt-1 text-red-600'
                                                                 />
@@ -316,7 +321,12 @@ export default function AddJobForm() {
                                                     type="button"
                                                     className="px-3 py-2 self-start bg-indigo-200 text-indigo-700 text-sm rounded
                                                                 hover:bg-indigo-300 transition duration-100"
-                                                    onClick={() => push({ dayOfWeek: "", timeBegin: undefined, timeEnd: undefined } as JobCustomSchedule)}
+                                                    onClick={() => push({ 
+                                                            dayOfWeek: "",
+                                                            timeBegin: undefined,
+                                                            timeEnd: undefined 
+                                                        } as JobCustomSchedule
+                                                    )}
                                                 >
                                                     Add Day
                                                 </button>

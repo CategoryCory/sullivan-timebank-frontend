@@ -1,21 +1,28 @@
+import React, { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { observer } from 'mobx-react-lite';
-import React, { Fragment } from 'react';
-import { useStore } from '../../../stores/store';
 
-function ModalContainer() {
-    const { modalStore } = useStore();
+interface Props {
+    title: string;
+    body: string;
+}
+
+export default function ModalContainer(props: Props) {
+    const [isOpen, setIsOpen] = useState(true);
+
+    const closeModal = () => {
+        setIsOpen(false);
+    }
 
     return (
         <Transition
             appear
-            show={modalStore.modal.open}
+            show={isOpen}
             as={Fragment}    
         >
             <Dialog
                 as="div"
                 className="fixed inset-0 z-10 overflow-y-auto"
-                onClose={modalStore.closeModal}
+                onClose={closeModal}
             >
                 <div className="min-h-screen px-4 text-center">
                     <Transition.Child
@@ -52,9 +59,9 @@ function ModalContainer() {
                                 as="h3"
                                 className="text-lg font-medium leading-6 text-gray-900"
                             >
-                                {modalStore.modal.title}
+                                {props.title}
                             </Dialog.Title>
-                            {modalStore.modal.body}
+                            {props.body}
                         </div>
                     </Transition.Child>
                 </div>
@@ -62,5 +69,3 @@ function ModalContainer() {
         </Transition>
     );
 }
-
-export default observer(ModalContainer);

@@ -7,7 +7,6 @@ import Login from "./components/account/Login";
 import Register from "./components/account/Register";
 import Layout from './components/layout/Layout';
 import Jobs from './components/jobs/Jobs';
-import ModalContainer from './components/common/modals/ModalContainer';
 import { Slide, ToastContainer } from 'react-toastify';
 import LoadingComponent from './components/LoadingComponent';
 import { useStore } from './stores/store';
@@ -15,7 +14,9 @@ import UserDashboard from './components/dashboard/UserDashboard';
 import NotFound from './components/NotFound';
 import UserProfile from './components/profile/UserProfile';
 import ProtectedRoute from './components/layout/PrivateRoute';
-import AddJob from './components/dashboard/AddJob';
+import Job from './components/dashboard/Job';
+import Privacy from './components/Privacy';
+import TermsAndConditions from './components/TermsAndConditions';
 
 function App() {
   const {commonStore, userStore} = useStore();
@@ -39,7 +40,6 @@ function App() {
         pauseOnHover={false}
         draggable
       />
-      <ModalContainer />
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
@@ -47,9 +47,12 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="jobs" element={<Jobs />} />
+          <Route path="privacy" element={<Privacy />} />
+          <Route path="terms" element={<TermsAndConditions />} />
           <Route element={<ProtectedRoute />}>
             <Route path="dashboard" element={<UserDashboard />} />
-            <Route path="dashboard/add-job" element={<AddJob />} />
+            <Route path="dashboard/job/:displayId" element={<Job />} />
+            <Route path="dashboard/job" element={<Job />} />
             <Route path="profile" element={<UserProfile />} />
           </Route>
         </Route>

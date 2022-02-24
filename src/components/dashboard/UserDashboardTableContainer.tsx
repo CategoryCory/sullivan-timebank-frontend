@@ -31,7 +31,7 @@ export default function UserDashboardTableContainer() {
                     </Tab>
                 </Tab.List>
                 <Tab.Panels className="container mx-auto flex justify-center items-center">
-                    <Tab.Panel><UserDashboardJobsTable /></Tab.Panel>
+                    <Tab.Panel className="w-full"><UserDashboardJobsTable /></Tab.Panel>
                     <Tab.Panel><h2>These are your job applications.</h2></Tab.Panel>
                 </Tab.Panels>
             </Tab.Group>

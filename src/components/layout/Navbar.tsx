@@ -134,7 +134,7 @@ export default function Navbar() {
                                                 <ListItemIcon>
                                                     <AddIcon fontSize="small" sx={{ color: "#6B7280" }} />
                                                 </ListItemIcon>
-                                                <Link to="/dashboard/add-job" className="font-sans text-gray-600">Add New Job</Link>
+                                                <Link to="/dashboard/job" className="font-sans text-gray-600">Add New Job</Link>
                                             </MenuItem>
                                             <MenuItem>
                                                 <ListItemIcon>

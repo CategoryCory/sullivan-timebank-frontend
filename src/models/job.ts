@@ -6,7 +6,7 @@ export interface Job {
     expiresOn: Date;
     jobStatus?: string;
     createdOn?: Date;
-    jobCategoryId: number;
+    jobCategoryId?: number;
     jobCategory?: string;
     createdById?: string;
     createdBy?: string;

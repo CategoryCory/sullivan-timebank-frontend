@@ -6,18 +6,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from 'uuid';
 import * as Yup from "yup";
-import slugify from "../../helpers/slugify";
-import LoadingComponent from "../LoadingComponent";
-import { useStore } from '../../stores/store';
 import agent from '../../api/agent';
+import { useStore } from '../../stores/store';
+import LoadingComponent from "../LoadingComponent";
+import slugify from "../../helpers/slugify";
 import DateInput from '../common/forms/DateInput';
+import MultiSelectInput from '../common/forms/MultiSelectInput';
 import TextareaInput from '../common/forms/TextareaInput';
 import TextInput from '../common/forms/TextInput';
-import { UserProfile } from '../../models/user';
-
-import MultiSelectInput from '../common/forms/MultiSelectInput';
-import { Skill } from '../../models/skill';
 import { OptionType } from '../../models/options';
+import { Skill } from '../../models/skill';
+import { UserProfile } from '../../models/user';
 
 function UserProfileForm() {
     const { userStore, userProfileStore, skillStore } = useStore();

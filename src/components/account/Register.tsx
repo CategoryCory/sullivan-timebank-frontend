@@ -108,8 +108,11 @@ export default function Register() {
                             <CheckboxInput
                                 name="termsAndConditions"
                             >
-                                I have read and agree to the
-                                <Link to="/" className="text-indigo-600">terms and conditions.</Link>
+                                <span>
+                                    I have read and agree to the&nbsp;
+                                    <Link to="/privacy" className='text-indigo-600'>privacy policy</Link> and&nbsp;
+                                    <Link to="/terms" className="text-indigo-600">terms and conditions.</Link>
+                                </span>
                             </CheckboxInput>
                             <button
                                 type="submit"

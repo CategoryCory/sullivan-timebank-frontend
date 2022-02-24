@@ -8,6 +8,7 @@ interface Props {
     label?: string;
     placeholder?: string;
     options: OptionType[];
+    currentSelection?: OptionType;
     onSelectionChange?: (selection: OptionType) => void;
 }
 
@@ -45,6 +46,7 @@ export default function SingleSelectInput(props: Props) {
                 placeholder={props.placeholder}
                 styles={customStyles}
                 options={props.options}
+                defaultValue={props.currentSelection}
                 onChange={option => formikProps.setFieldValue(props.name, option?.value)}
             />
             <ErrorMessage
