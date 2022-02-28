@@ -1,10 +1,10 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
-import { Job } from "../models/job";
+import { IJob } from "../models/job";
 
 export default class JobStore {
-    jobRegistry = new Map<string, Job>();
-    selectedJob: Job | undefined = undefined;
+    jobRegistry = new Map<string, IJob>();
+    selectedJob: IJob | undefined = undefined;
     editMode = false;
     loading = false;
     loadingInitial = false;
@@ -49,7 +49,7 @@ export default class JobStore {
         }
     }
 
-    private setJob = (job: Job) => {
+    private setJob = (job: IJob) => {
         this.jobRegistry.set(job.displayId, job);
     }
 

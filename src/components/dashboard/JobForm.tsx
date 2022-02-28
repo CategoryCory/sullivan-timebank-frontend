@@ -3,6 +3,7 @@ import axios from 'axios';
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik';
 import { CircularProgress } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
@@ -10,8 +11,8 @@ import { v4 as uuidv4 } from 'uuid';
 import * as Yup from "yup";
 import TextareaInput from '../common/forms/TextareaInput';
 import SingleSelectInput from '../common/forms/SingleSelectInput';
-import { Job, JobCategory, JobCustomSchedule } from '../../models/job';
-import { OptionType, NumberOptionType } from '../../models/options';
+import { IJob, IJobForm, IJobCategory, IJobCustomSchedule } from '../../models/job';
+import { NumberOptionType } from '../../models/options';
 import MaterialSelectInput from '../common/forms/MaterialSelectInput';
 import DateInput from '../common/forms/DateInput';
 import TextInput from '../common/forms/TextInput';
@@ -21,12 +22,13 @@ interface Props {
 }
 
 export default function JobForm(props: Props) {
+    const [isEditing, setIsEditing] = useState(false);
     const [showCustomSchedule, setShowCustomSchedule] = useState(false);
-    const [jobCategories, setJobCategories] = useState<JobCategory[]>([]);
-    const [jobDetails, setJobDetails] = useState<Job>({
+    const [jobCategories, setJobCategories] = useState<IJobCategory[]>([]);
+    const [jobFormDetails, setJobFormDetails] = useState<IJobForm>({
         displayId: "",
         jobName: "",
-        jobCategory: "",
+        jobCategoryId: 0,
         expiresOn: new Date(),
         description: "",
         jobScheduleType: "Open",
@@ -35,7 +37,7 @@ export default function JobForm(props: Props) {
                 dayOfWeek: "",
                 timeBegin: undefined,
                 timeEnd: undefined,
-            } as JobCustomSchedule
+            } as IJobCustomSchedule
         ],
     })
     const navigate = useNavigate();
@@ -84,7 +86,7 @@ export default function JobForm(props: Props) {
     ]
     
     useEffect(() => {
-        axios.get<JobCategory[]>("/jobcategories")
+        axios.get<IJobCategory[]>("/jobcategories")
             .then(res => {
                 setJobCategories(res.data);
             })
@@ -95,32 +97,40 @@ export default function JobForm(props: Props) {
 
     useEffect(() => {
         if (props.currentDisplayId != null && props.currentDisplayId !== "") {
-            axios.get<Job>(`/jobs/${props.currentDisplayId}`)
+            axios.get<IJob>(`/jobs/${props.currentDisplayId}`)
                 .then(res => {
                     if (res.data.jobScheduleType === "Custom") {
                         setShowCustomSchedule(true);
                     }
-                    setJobDetails(res.data);
-                    console.log(res.data);
+                    setJobFormDetails({
+                        displayId: res.data.displayId,
+                        jobName: res.data.jobName,
+                        jobCategoryId: res.data.jobCategoryId,
+                        expiresOn: res.data.expiresOn,
+                        description: res.data.description,
+                        jobScheduleType: res.data.jobScheduleType,
+                        jobSchedules: res.data.jobSchedules,
+                    });
+                    setIsEditing(true);
                 })
                 .catch(error => {
                     toast.error("An error occurred while fetching this job.");
-                    console.log(error);
+                    console.error(error);
                 })
         }
     }, [props.currentDisplayId]);
     
     const handleCustomScheduleChanged = (state: boolean) => {
         setShowCustomSchedule(state);
-    } 
-            
+    }
+
     return (
         <Formik
             enableReinitialize
-            initialValues={jobDetails}
+            initialValues={jobFormDetails}
             validationSchema={Yup.object({
                 jobName: Yup.string().required("Please enter a name for this job."),
-                jobCategory: Yup.string().required("Please select a category for this job."),
+                jobCategoryId: Yup.number().required("Please select a category for this job."),
                 expiresOn: Yup
                             .date()
                             .required("Please enter an expiration date for this job.")
@@ -143,27 +153,41 @@ export default function JobForm(props: Props) {
                 })
             })}
             onSubmit={ async (values, { setErrors, setSubmitting }) => {
-                const jobToAdd: Job = {
-                    displayId: uuidv4(),
+                const jobToAdd: IJob = {
+                    displayId: "",
                     jobName: values.jobName,
                     description: values.description,
                     jobScheduleType: values.jobScheduleType,
                     expiresOn: new Date(values.expiresOn),
-                    jobCategoryId: parseInt(values.jobCategory!, 10),
+                    jobCategoryId: values.jobCategoryId,
                     jobSchedules: values.jobSchedules ? values.jobSchedules.filter(jobSchedule => (
                         jobSchedule.dayOfWeek !== "" && jobSchedule.timeBegin != null && jobSchedule.timeEnd != null
-                    )) : new Array<JobCustomSchedule>(),
+                    )) : new Array<IJobCustomSchedule>(),
                 };
 
-                axios.post<Job>('/jobs', jobToAdd)
-                    .then(response => {
-                        toast.success("Your job has been successfully added.");
-                        navigate("/dashboard", { replace: true });
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        setSubmitting(false);
-                    });
+                if (isEditing) {
+                    jobToAdd["displayId"] = jobFormDetails.displayId;
+                    axios.put<IJob>('/jobs', jobToAdd)
+                        .then(response => {
+                            toast.success("You have successfully edited this job.");
+                            navigate("/dashboard", { replace: true });
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            setSubmitting(false);
+                        })
+                } else {
+                    jobToAdd["displayId"] = uuidv4();
+                    axios.post<IJob>('/jobs', jobToAdd)
+                        .then(response => {
+                            toast.success("Your job has been successfully added.");
+                            navigate("/dashboard", { replace: true });
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            setSubmitting(false);
+                        });
+                }
             }}
         >
             {formik => (
@@ -184,18 +208,14 @@ export default function JobForm(props: Props) {
                                 <SingleSelectInput
                                     key={formik.values.jobCategoryId}
                                     label='Job Category'
-                                    name='jobCategory'
+                                    name='jobCategoryId'
                                     options={jobCategories.map(category => (
                                         {
                                             label: category.jobCategoryName,
-                                            value: category.jobCategoryId.toString(),
-                                        } as OptionType
+                                            value: category.jobCategoryId,
+                                        } as NumberOptionType
                                     ))}
-                                    currentSelection={{
-                                        label: formik.values.jobCategory ?? "",
-                                        value: formik.values.jobCategoryId?.toString() ?? ""
-                                    } as OptionType }
-                                    // onSelectionChange={handleCategorySelection}
+                                    currentSelection={formik.values.jobCategoryId}
                                 />
                                 <DateInput
                                     label='Expires On'
@@ -325,7 +345,7 @@ export default function JobForm(props: Props) {
                                                             dayOfWeek: "",
                                                             timeBegin: undefined,
                                                             timeEnd: undefined 
-                                                        } as JobCustomSchedule
+                                                        } as IJobCustomSchedule
                                                     )}
                                                 >
                                                     Add Day
@@ -344,9 +364,10 @@ export default function JobForm(props: Props) {
                             disabled={formik.isSubmitting}
                         >
                             {formik.isSubmitting 
-                                    ? <CircularProgress size={16} sx={{ color: "#fff" }} /> 
-                                    : <AddIcon fontSize="small" />}
-                                    Add Job
+                                ? <CircularProgress size={16} sx={{ color: "#fff" }} /> 
+                                : (isEditing ? <EditIcon fontSize="small" /> : <AddIcon fontSize="small" />)
+                            }
+                                {isEditing ? "Edit Job" : "Add Job"}
                         </button>
                     </div>
                 </Form>

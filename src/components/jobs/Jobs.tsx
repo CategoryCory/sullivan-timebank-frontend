@@ -2,18 +2,18 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { DataGrid, GridColDef, GridRenderCellParams, GridRowsProp, GridValueFormatterParams } from '@mui/x-data-grid';
-import { Job } from '../../models/job';
+import { IJob } from '../../models/job';
 import { useStore } from '../../stores/store';
 
 
 export default function Jobs() {
     const [loading, setLoading] = useState(true);
-    const [jobs, setJobs] = useState<Job[]>([]);
+    const [jobs, setJobs] = useState<IJob[]>([]);
     const { userStore } = useStore();
 
     useEffect(() => {
         setLoading(true);
-        axios.get<Job[]>("/jobs")
+        axios.get<IJob[]>("/jobs")
             .then(res => {
                 setJobs(res.data);
                 setLoading(false);

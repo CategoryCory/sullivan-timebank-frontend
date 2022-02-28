@@ -1,4 +1,4 @@
-export interface Job {
+export interface IJob {
     displayId: string;
     jobName: string;
     description: string;
@@ -10,16 +10,27 @@ export interface Job {
     jobCategory?: string;
     createdById?: string;
     createdBy?: string;
-    jobSchedules?: JobCustomSchedule[];
+    jobSchedules?: IJobCustomSchedule[];
 }
 
-export interface JobCategory {
+export interface IJobForm {
+    displayId: string;
+    jobName: string;
+    description: string;
+    jobScheduleType: string;
+    expiresOn: Date;
+    jobStatus?: string;
+    jobCategoryId?: number;
+    jobSchedules?: IJobCustomSchedule[];
+}
+
+export interface IJobCategory {
     jobCategoryId: number;
     jobCategoryName: string;
-    jobCategorySlug: string;
+    jobCategorySlug?: string;
 }
 
-export interface JobCustomSchedule {
+export interface IJobCustomSchedule {
     dayOfWeek: string;
     timeBegin: number | undefined;
     timeEnd: number | undefined;

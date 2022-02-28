@@ -1,54 +1,45 @@
 import React from 'react';
-import Select, { StylesConfig } from "react-select";
-import { ErrorMessage, useFormikContext } from 'formik';
-import { OptionType } from '../../../models/options';
+import { ErrorMessage, Field, FieldProps, useFormikContext } from 'formik';
+import { NumberOptionType } from '../../../models/options';
 
 interface Props {
     name: string;
     label?: string;
     placeholder?: string;
-    options: OptionType[];
-    currentSelection?: OptionType;
-    onSelectionChange?: (selection: OptionType) => void;
+    options: NumberOptionType[];
+    currentSelection?: number;
+    onSelectionChange?: (selection: NumberOptionType) => void;
 }
 
 export default function SingleSelectInput(props: Props) {
     const formikProps = useFormikContext();
 
-    const customStyles: StylesConfig<OptionType, false> = {
-        option: (provided, state) => ({
-            ...provided,
-            backgroundColor: state.isDisabled
-                ? undefined
-                : state.isSelected
-                ? "rgb(79 70 229)"
-                : state.isFocused
-                ? "#c7d2fe"
-                : undefined,
-        }),
-        control: (provided, state) => ({
-            ...provided,
-            padding: "0.15rem 0.4rem",
-            border: state.isFocused ? "2px solid rgb(79 70 229)" : "2px solid rgb(148 163 184)",
-            borderRadius: "0.25rem",
-            boxShadow: state.isFocused ? "none" : "none",
-        }),
-        singleValue: (provided, state) => ({
-            ...provided,
-        })
-    };
-
     return (
         <div>
             {props.label && <label htmlFor={props.name} className="block mb-2">{props.label}</label>}
-            <Select
+            <Field
                 name={props.name}
-                placeholder={props.placeholder}
-                styles={customStyles}
-                options={props.options}
-                defaultValue={props.currentSelection}
-                onChange={option => formikProps.setFieldValue(props.name, option?.value)}
-            />
+            >   
+            {({ field /*, form, meta */ }: FieldProps) => (
+                <select
+                    value={field.value}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                        formikProps.setFieldValue(props.name, e.target.value);
+                    }}
+                    className="w-full border-2 border-slate-400 rounded focus:ring-0 focus:border-indigo-600
+                                transition duration-150"
+                >
+                    {props.options.map(option => (
+                        <option
+                            key={option.value}
+                            value={option.value}
+                        >
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            )}
+            </Field>
             <ErrorMessage
                 name={props.name}
                 component='p'

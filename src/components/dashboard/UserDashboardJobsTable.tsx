@@ -9,15 +9,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import AddIcon from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom';
-import { Job } from '../../models/job';
+import { IJob } from '../../models/job';
 
 export default function UserDashboardJobsTable() {
     const [loading, setLoading] = useState(true);
-    const [jobs, setJobs] = useState<Job[]>([]);
+    const [jobs, setJobs] = useState<IJob[]>([]);
 
     useEffect(() => {
         setLoading(true);
-        axios.get<Job[]>("/jobs")
+        axios.get<IJob[]>("/jobs")
             .then(res => {
                 setJobs(res.data);
                 setLoading(false);

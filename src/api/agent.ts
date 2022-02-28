@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { store } from "../stores/store";
 import { User, UserFormValues, UserProfile } from "../models/user";
-import { Job } from "../models/job";
+import { IJob } from "../models/job";
 import { UserAverageRating } from "../models/userRating";
 import { TokenBalance } from "../models/tokenTransactions";
 import { Skill } from "../models/skill";
@@ -66,8 +66,8 @@ const Profile = {
 }
 
 const Jobs = {
-    getAllJobs: () => requests.get<Job[]>("/jobs"),
-    getJobById: (id: string) => requests.get<Job>(`/jobs/${id}`),
+    getAllJobs: () => requests.get<IJob[]>("/jobs"),
+    getJobById: (id: string) => requests.get<IJob>(`/jobs/${id}`),
 }
 
 const Ratings = {
