@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { format } from "date-fns";
-import { CircularProgress } from '@mui/material';
-import { DataGrid, GridColDef, GridRenderCellParams, GridRowsProp, GridValueFormatterParams } from "@mui/x-data-grid";
+import { CircularProgress, Dialog } from '@mui/material';
+import { DataGrid, GridActionsCellItem, GridColDef, GridColumnHeaderParams, GridRenderCellParams, GridRowsProp, GridValueFormatterParams } from "@mui/x-data-grid";
+import EditIcon from '@mui/icons-material/Edit';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import AddIcon from '@mui/icons-material/Add';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IJob } from '../../models/job';
 
 export default function UserDashboardJobsTable() {
     const [loading, setLoading] = useState(true);
     const [jobs, setJobs] = useState<IJob[]>([]);
+    // const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
@@ -31,27 +35,39 @@ export default function UserDashboardJobsTable() {
     const dgColumns: GridColDef[] = [
         { 
             field: "category",
-            headerName: "Category",
             flex: 1,
+            renderHeader: (params: GridColumnHeaderParams) => (
+                <span className='font-bold text-lg'>Category</span>
+            ),
             renderCell: (params: GridRenderCellParams<string>) => (
                 <span className="px-3 py-0.5 inline-flex items-center rounded-full text-sm bg-indigo-100 text-indigo-800">
                     {params.value}
                 </span>
             )
         },
-        { field: "jobName", headerName: "Job Name", flex: 1 },
-        { field: 
-            "createdOn",
-            headerName: "Posted On",
+        { 
+            field: "jobName",
+            flex: 2,
+            renderHeader: (params: GridColumnHeaderParams) => (
+                <span className='font-bold text-lg'>Job Name</span>
+            ),
+        },
+        { 
+            field: "createdOn",
             flex: 1,
+            renderHeader: (params: GridColumnHeaderParams) => (
+                <span className='font-bold text-lg'>Posted On</span>
+            ),
             valueFormatter: (params: GridValueFormatterParams) => (
                 format(new Date(params.value!.toString()), "MMMM d, yyyy")
             )
         },
         { 
             field: "jobStatus",
-            headerName: "Status",
             flex: 1,
+            renderHeader: (params: GridColumnHeaderParams) => (
+                <span className='font-bold text-lg'>Status</span>
+            ),
             renderCell: (params: GridRenderCellParams<string>) => {
                 let icon: React.ReactElement;
                 let cssClass: string;
@@ -78,10 +94,40 @@ export default function UserDashboardJobsTable() {
                 return <span className={`inline-flex items-center gap-2 ${cssClass}`}>{icon}{params.value}</span>;
             }
         },
+        {
+            field: "actions",
+            type: "actions",
+            renderHeader: (params: GridColumnHeaderParams) => (
+                <span className='font-bold text-lg'>Edit</span>
+            ),
+            renderCell: (params: GridRenderCellParams<string>) => (
+                <div className='w-full flex justify-around items-center'>
+                    <GridActionsCellItem
+                        icon={<EditIcon />}
+                        label="Edit Job"
+                        onClick={() => navigate(`/dashboard/job/${params.id}`)}
+                        sx={{ "&:hover": { color: "#0284C7" } }}
+                    />
+                    {/* <GridActionsCellItem
+                        icon={<DeleteOutlineIcon />}
+                        label="Delete Job"
+                        onClick={() => alert("Deleting job")}
+                        sx={{ "&:hover": { color: "#DC2626" } }}
+                    /> */}
+                </div>
+            )
+        },
     ];
 
     const dgRows: GridRowsProp = Array.from(jobs).map(job => (
-        { id: job.displayId, category: job.jobCategory, jobName: job.jobName, createdOn: job.createdOn, jobStatus: job.jobStatus }
+        { 
+            id: job.displayId, 
+            category: job.jobCategory, 
+            jobName: job.jobName, 
+            createdOn: job.createdOn, 
+            jobStatus: job.jobStatus,
+            actions: job.displayId,
+        }
     ));
 
     if (loading) return (
@@ -108,15 +154,21 @@ export default function UserDashboardJobsTable() {
 
     return (
         <div className="h-96 my-6 flex">
-            <div className="min-h-full grow">
+            <div className="font-sans min-h-full grow">
                 <DataGrid 
                     autoHeight
                     pageSize={10}
                     rowsPerPageOptions={[5, 10, 25]}
                     rows={dgRows}
                     columns={dgColumns}
+                    sx={{ fontFamily: "inherit" }}
                 />
             </div>
+            {/* <Dialog
+
+            >
+
+            </Dialog> */}
         </div>
     );
 }
