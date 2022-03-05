@@ -29,7 +29,7 @@ export default function MaterialSelectInput(props: Props) {
                     label={props.label}
                     value={props.initialValue}
                     MenuProps={{ PaperProps: { sx: { maxHeight: 250 } } }}
-                    // sx={{ maxHeight: 2 }}
+                    sx={{ fontFamily: "inherit" }}
                     // placeholder={props.placeholder}
                     onChange={handleChange}
                 >
