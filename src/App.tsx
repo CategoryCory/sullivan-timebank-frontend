@@ -17,6 +17,7 @@ import ProtectedRoute from './components/layout/PrivateRoute';
 import Job from './components/dashboard/Job';
 import Privacy from './components/Privacy';
 import TermsAndConditions from './components/TermsAndConditions';
+import JobDetails from './components/jobs/JobDetails';
 
 function App() {
   const {commonStore, userStore} = useStore();
@@ -47,6 +48,7 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="jobs" element={<Jobs />} />
+          <Route path="jobs/details/:displayId" element={<JobDetails />} />
           <Route path="privacy" element={<Privacy />} />
           <Route path="terms" element={<TermsAndConditions />} />
           <Route element={<ProtectedRoute />}>

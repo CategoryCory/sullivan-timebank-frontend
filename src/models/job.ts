@@ -1,4 +1,5 @@
 export interface IJob {
+    jobId?: number;
     displayId: string;
     jobName: string;
     description: string;
@@ -24,6 +25,13 @@ export interface IJobForm {
     jobSchedules?: IJobCustomSchedule[];
 }
 
+export interface IJobApplication {
+    jobId: number;
+    applicantId?: string;
+    createdOn?: Date;
+    jobSchedules: number[];
+}
+
 export interface IJobCategory {
     jobCategoryId: number;
     jobCategoryName: string;
@@ -31,6 +39,7 @@ export interface IJobCategory {
 }
 
 export interface IJobCustomSchedule {
+    jobScheduleId?: number;
     dayOfWeek: string;
     timeBegin: number | undefined;
     timeEnd: number | undefined;
