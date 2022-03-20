@@ -54,4 +54,5 @@ export interface IJobCustomSchedule {
     dayOfWeek: string;
     timeBegin: number | undefined;
     timeEnd: number | undefined;
+    jobScheduleStatus?: string;
 }
