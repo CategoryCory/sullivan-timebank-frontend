@@ -1,5 +1,6 @@
 import { Tab } from '@headlessui/react';
 import React from 'react';
+import UserDashboardApplicationsTable from './UserDashboardApplicationsTable';
 import UserDashboardJobsTable from './UserDashboardJobsTable';
 
 export default function UserDashboardTableContainer() {
@@ -27,12 +28,12 @@ export default function UserDashboardTableContainer() {
                                 : `${tabBaseClasses} ${tabInactiveClasses}`
                         }
                     >
-                        Your Job Applications
+                        Your Submitted Applications
                     </Tab>
                 </Tab.List>
                 <Tab.Panels className="container mx-auto flex justify-center items-center">
                     <Tab.Panel className="w-full"><UserDashboardJobsTable /></Tab.Panel>
-                    <Tab.Panel><h2>These are your job applications.</h2></Tab.Panel>
+                    <Tab.Panel className="w-full"><UserDashboardApplicationsTable /></Tab.Panel>
                 </Tab.Panels>
             </Tab.Group>
         </main>

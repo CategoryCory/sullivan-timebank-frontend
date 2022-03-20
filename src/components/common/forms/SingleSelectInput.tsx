@@ -20,25 +20,26 @@ export default function SingleSelectInput(props: Props) {
             <Field
                 name={props.name}
             >   
-            {({ field /*, form, meta */ }: FieldProps) => (
-                <select
-                    value={field.value}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                        formikProps.setFieldValue(props.name, e.target.value);
-                    }}
-                    className="w-full border-2 border-slate-400 rounded focus:ring-0 focus:border-indigo-600
-                                transition duration-150"
-                >
-                    {props.options.map(option => (
-                        <option
-                            key={option.value}
-                            value={option.value}
-                        >
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
-            )}
+                {({ field /*, form, meta */ }: FieldProps) => (
+                    <select
+                        value={field.value}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                            formikProps.setFieldValue(props.name, e.target.value);
+                        }}
+                        className="w-full border-2 border-slate-400 rounded focus:ring-0 focus:border-indigo-600
+                                    transition duration-150"
+                    >
+                        <option value="0"></option>
+                        {props.options.map(option => (
+                            <option
+                                key={option.value}
+                                value={option.value}
+                            >
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
+                )}
             </Field>
             <ErrorMessage
                 name={props.name}

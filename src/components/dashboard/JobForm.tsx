@@ -93,7 +93,10 @@ export default function JobForm(props: Props) {
             initialValues={jobFormDetails}
             validationSchema={Yup.object({
                 jobName: Yup.string().required("Please enter a name for this job."),
-                jobCategoryId: Yup.number().required("Please select a category for this job."),
+                jobCategoryId: Yup
+                                .number()
+                                .moreThan(0, "Please select a category for this job.")
+                                .required("Please select a category for this job."),
                 expiresOn: Yup
                             .date()
                             .required("Please enter an expiration date for this job.")
@@ -172,12 +175,16 @@ export default function JobForm(props: Props) {
                                     key={formik.values.jobCategoryId}
                                     label='Job Category'
                                     name='jobCategoryId'
-                                    options={jobCategories.map(category => (
-                                        {
-                                            label: category.jobCategoryName,
-                                            value: category.jobCategoryId,
-                                        } as NumberOptionType
-                                    ))}
+                                    placeholder='Please select a category'
+                                    options={jobCategories.length > 0 
+                                        ? jobCategories.map(category => (
+                                            {
+                                                label: category.jobCategoryName,
+                                                value: category.jobCategoryId,
+                                            } as NumberOptionType
+                                        ))
+                                        : new Array<NumberOptionType>()
+                                    }
                                     currentSelection={formik.values.jobCategoryId}
                                 />
                                 <DateInput

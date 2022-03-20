@@ -1,3 +1,5 @@
+import { UserProfile } from "./user";
+
 export interface IJob {
     jobId?: number;
     displayId: string;
@@ -12,6 +14,7 @@ export interface IJob {
     createdById?: string;
     createdBy?: string;
     jobSchedules?: IJobCustomSchedule[];
+    jobApplications?: IJobApplication[];
 }
 
 export interface IJobForm {
@@ -26,9 +29,17 @@ export interface IJobForm {
 }
 
 export interface IJobApplication {
-    jobId: number;
-    applicantId?: string;
+    jobApplicationId?: number;
+    status?: string;
     createdOn?: Date;
+    resolvedOn?: Date;
+    jobId: number;
+    jobName?: string;
+    jobCreatedByName?: string;
+    jobCategory?: string;
+    // applicantId?: string;
+    // applicantName?: string;
+    applicant?: UserProfile;
     jobSchedules: number[];
 }
 

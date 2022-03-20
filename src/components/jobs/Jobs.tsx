@@ -9,21 +9,21 @@ import { Link } from 'react-router-dom';
 
 
 export default function Jobs() {
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
     const [jobs, setJobs] = useState<IJob[]>([]);
     const navigate = useNavigate();
     const { userStore } = useStore();
 
     useEffect(() => {
-        setLoading(true);
+        // setLoading(true);
         axios.get<IJob[]>("/jobs")
             .then(res => {
                 setJobs(res.data);
-                setLoading(false);
+                // setLoading(false);
             })
             .catch(error => {
                 console.error(error);
-                setLoading(false);
+                // setLoading(false);
             });
     }, []);
 
@@ -59,15 +59,18 @@ export default function Jobs() {
         },
     ];
 
-    const dgRows: GridRowsProp = Array.from(jobs).map(job => (
-        { 
-            id: job.displayId, 
-            category: job.jobCategory, 
-            jobName: job.jobName, 
-            createdOn: job.createdOn, 
-            createdBy: job.createdBy,
-        }
-    ));
+    // This should filter out the current user's jobs
+    const dgRows: GridRowsProp = jobs
+                                .filter(job => job.createdById !== userStore.user?.userId)
+                                .map(job => (
+                                    { 
+                                        id: job.displayId, 
+                                        category: job.jobCategory, 
+                                        jobName: job.jobName, 
+                                        createdOn: job.createdOn, 
+                                        createdBy: job.createdBy,
+                                    }
+                                ));
 
     if (userStore.isLoggedIn) {
         dgColumns.push({

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { format } from "date-fns";
-import { CircularProgress, Dialog } from '@mui/material';
+import { CircularProgress, Tooltip } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef, GridColumnHeaderParams, GridRenderCellParams, GridRowsProp, GridValueFormatterParams } from "@mui/x-data-grid";
 import EditIcon from '@mui/icons-material/Edit';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import ArticleIcon from '@mui/icons-material/Article';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import AddIcon from '@mui/icons-material/Add';
 import { Link, useNavigate } from 'react-router-dom';
@@ -16,12 +16,11 @@ import { IJob } from '../../models/job';
 export default function UserDashboardJobsTable() {
     const [loading, setLoading] = useState(true);
     const [jobs, setJobs] = useState<IJob[]>([]);
-    // const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
-        axios.get<IJob[]>("/jobs")
+        axios.get<IJob[]>("/jobs/currentuser")  // This should only load jobs for the currently logged in user
             .then(res => {
                 setJobs(res.data);
                 setLoading(false);
@@ -73,15 +72,15 @@ export default function UserDashboardJobsTable() {
                 let cssClass: string;
 
                 switch (params.value) {
-                    case 'available':
+                    case 'Available':
                         icon = <AccessTimeIcon />;
                         cssClass = "text-blue-600";
                         break;
-                    case 'completed':
+                    case 'Completed':
                         icon = <CheckIcon />;
                         cssClass = "text-emerald-600";
                         break;
-                    case 'deleted':
+                    case 'Deleted':
                         icon = <CloseIcon />;
                         cssClass = "text-red-600";
                         break;
@@ -97,16 +96,22 @@ export default function UserDashboardJobsTable() {
         {
             field: "actions",
             type: "actions",
-            renderHeader: (params: GridColumnHeaderParams) => (
-                <span className='font-bold text-lg'>Edit</span>
-            ),
+            // renderHeader: (params: GridColumnHeaderParams) => (
+            //     <span className='font-bold text-lg'>Edit</span>
+            // ),
             renderCell: (params: GridRenderCellParams<string>) => (
                 <div className='w-full flex justify-around items-center'>
                     <GridActionsCellItem
-                        icon={<EditIcon />}
-                        label="Edit Job"
+                        icon={<Tooltip title="Edit job"><EditIcon /></Tooltip>}
+                        label="Edit job"
                         onClick={() => navigate(`/dashboard/job/${params.id}`)}
                         sx={{ "&:hover": { color: "#0284C7" } }}
+                    />
+                    <GridActionsCellItem
+                        icon={<Tooltip title="View job details"><ArticleIcon /></Tooltip>}
+                        label="View job details"
+                        onClick={() => navigate(`/dashboard/job/details/${params.id}`)}
+                        sx={{ "&:hover": { color: "#4F46E5" } }}
                     />
                     {/* <GridActionsCellItem
                         icon={<DeleteOutlineIcon />}
@@ -131,7 +136,7 @@ export default function UserDashboardJobsTable() {
     ));
 
     if (loading) return (
-        <div className='mt-16'>
+        <div className='mt-16 flex justify-center'>
             <CircularProgress sx={{ color: "#4f46e5" }} />
         </div>
     );

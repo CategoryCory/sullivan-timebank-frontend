@@ -5,6 +5,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CheckIcon from '@mui/icons-material/Check';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import { toast } from "react-toastify";
 import { useStore } from "../../stores/store";
@@ -65,7 +66,7 @@ export default function JobDetails() {
 
     useEffect(() => {
         if (jobDetails.displayId) {
-            axios.get<IJobApplicationCheck>(`/jobapplications/?jobId=${jobDetails.jobId}`)
+            axios.get<IJobApplicationCheck>(`/jobapplications/verify/?jobId=${jobDetails.jobId}`)
                 .then(res => {
                     setExistingApplication(res.data);
                 })
@@ -201,7 +202,8 @@ export default function JobDetails() {
                 <section className='mt-6 px-20'>
                     {userStore.isLoggedIn ? (
                         existingApplication.applicationExists ? (
-                            <p className='text-sm text-gray-500'>
+                            <p className='flex items-center gap-1 text-sm text-gray-500'>
+                                <CheckCircleOutlineIcon fontSize="small" sx={{ color: "#10B981" }} />
                                 You applied for this job on {format(new Date(existingApplication.applicationDate), "MMMM d, yyyy")}.
                             </p>
                         ) : (
