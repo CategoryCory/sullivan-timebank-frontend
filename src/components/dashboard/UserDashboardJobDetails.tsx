@@ -210,7 +210,7 @@ export default function UserDashboardJobDetails() {
                         these applications.
                     </p>
                     {jobApplications?.length === 0 ? (
-                        <p className='text-sm text-gray-500'>
+                        <p className='my-4 text-sm text-gray-500'>
                             This job currently has no applicants.
                         </p>
                     ) : (
@@ -233,8 +233,8 @@ export default function UserDashboardJobDetails() {
                                         <ul className='max-w-4xl divide-y divide-gray-200'>
                                             {jobApplications?.filter(a => a.jobApplicationSchedule?.dayOfWeek === schedule.dayOfWeek).map(a => (
                                                 <li key={a.jobApplicationId} className="px-3 py-2">
-                                                    <div className='flex items-center space-x-4'>
-                                                        <div className='flex-1 min-w-0'>
+                                                    <div className='grid grid-cols-[auto_25%_20%_100px]'>
+                                                        <div className=''>
                                                             <p className='font-bold'>
                                                                 {`${a.applicant?.firstName} ${a.applicant?.lastName}`}
                                                             </p>
@@ -250,7 +250,7 @@ export default function UserDashboardJobDetails() {
                                                                 ))}
                                                             </div>
                                                         </div>
-                                                        <div className='flex-1 min-w-0'>
+                                                        <div className=''>
                                                             <p className="text-sm text-gray-500 tracking-wider">
                                                                 Time Slot
                                                             </p>
@@ -258,7 +258,7 @@ export default function UserDashboardJobDetails() {
                                                                 {`${getTimeOfDayLabel(schedule.timeBegin!)} - ${getTimeOfDayLabel(schedule.timeEnd!)}`}
                                                             </p>
                                                         </div>
-                                                        <div className='flex-1 min-w-0'>
+                                                        <div className=''>
                                                             <p className='text-sm text-gray-500 tracking-wider'>
                                                                 Status
                                                             </p>

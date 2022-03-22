@@ -19,6 +19,8 @@ import Privacy from './components/Privacy';
 import TermsAndConditions from './components/TermsAndConditions';
 import JobDetails from './components/jobs/JobDetails';
 import UserDashboardJobDetails from './components/dashboard/UserDashboardJobDetails';
+import UserRatings from './components/dashboard/UserRatings';
+import TokenTransactions from './components/dashboard/TokenTransactions';
 
 function App() {
   const {commonStore, userStore} = useStore();
@@ -57,6 +59,8 @@ function App() {
             <Route path="dashboard/job" element={<Job />} />
             <Route path="dashboard/job/:displayId" element={<Job />} />
             <Route path="dashboard/job/details/:displayId" element={<UserDashboardJobDetails />} />
+            <Route path="dashboard/ratings" element={<UserRatings />} />
+            <Route path="dashboard/transactions" element={<TokenTransactions />} />
             <Route path="profile" element={<UserProfile />} />
           </Route>
         </Route>

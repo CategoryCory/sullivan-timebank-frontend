@@ -1,4 +1,5 @@
 export interface UserRating {
+    userRatingId?: number;
     rating: number;
     comments?: string;
     createdOn?: Date;
