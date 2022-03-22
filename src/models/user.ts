@@ -11,6 +11,7 @@ export interface User {
 }
 
 export interface UserProfile {
+    id?: string;
     firstName: string;
     lastName: string;
     streetAddress: string;

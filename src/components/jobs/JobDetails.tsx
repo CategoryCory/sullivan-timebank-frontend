@@ -94,24 +94,39 @@ export default function JobDetails() {
     }
 
     const handleSubmit = () => {
-        console.log(jobDetails);
-
         if (jobDetails == null || jobDetails.jobId == null) {
             toast.error("There was an error submitting this application.");
         }
 
-        const jobApplicationToAdd: IJobApplication = {
-            jobId: jobDetails.jobId!,
-            jobSchedules: scheduleIds,
-        };
+        const applicationPostRequests = scheduleIds.map(id => {
+            const app: IJobApplication = {
+                jobId: jobDetails.jobId!,
+                jobApplicationScheduleId: id,
+            };
 
-        axios.post<IJobApplication>("/jobapplications", jobApplicationToAdd)
-            .then(res => {
+            return axios.post<IJobApplication>("/jobapplications", app);
+        });
+
+        axios.all(applicationPostRequests)
+            .then(axios.spread((...responses) => {
                 setModalOpen(true);
-            })
-            .catch(err => {
-                console.error(err);
-            })
+            }))
+            .catch((errors: AxiosError[]) => {
+                errors.forEach(error => console.error(error));
+            });
+
+        // const jobApplicationToAdd: IJobApplication = {
+        //     jobId: jobDetails.jobId!,
+        //     jobSchedules: scheduleIds,
+        // };
+
+        // axios.post<IJobApplication>("/jobapplications", jobApplicationToAdd)
+        //     .then(res => {
+        //         setModalOpen(true);
+        //     })
+        //     .catch(err => {
+        //         console.error(err);
+        //     })
     }
 
     return (

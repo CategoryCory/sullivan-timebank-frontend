@@ -37,10 +37,11 @@ export interface IJobApplication {
     jobName?: string;
     jobCreatedByName?: string;
     jobCategory?: string;
-    // applicantId?: string;
-    // applicantName?: string;
     applicant?: UserProfile;
-    jobSchedules: number[];
+    jobApplicationScheduleId?: number;
+    jobApplicationSchedule?: IJobCustomSchedule;
+    // jobSchedules?: number[];
+    // jobApplicationSchedules?: IJobCustomSchedule[];
 }
 
 export interface IJobCategory {

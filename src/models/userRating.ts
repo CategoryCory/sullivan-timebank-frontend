@@ -1,11 +1,11 @@
 export interface UserRating {
     rating: number;
-    comments: string;
-    createdOn: Date;
+    comments?: string;
+    createdOn?: Date;
     authorId: string;
-    authorName: string;
+    authorName?: string;
     revieweeId: string;
-    revieweeName: string;
+    revieweeName?: string;
 }
 
 export interface UserAverageRating {

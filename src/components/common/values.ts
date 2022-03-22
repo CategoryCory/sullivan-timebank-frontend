@@ -37,3 +37,18 @@ export const timesOfDay: NumberOptionType[] = [
     { value: 1830, label: "6:30 PM" },
     { value: 1900, label: "7:00 PM" },
 ]
+
+export function getWeekdayLabel(dayId: number): string {
+    return daysOfWeek.find(day => day.value === dayId)?.label ?? "";
+}
+
+export function getTimeOfDayLabel(timeId: number): string {
+    return timesOfDay.find(time => time.value === timeId)?.label ?? "";
+}
+
+export const jobApplicationStatuses = {
+    pending: "Pending",
+    accepted: "Accepted",
+    declined: "Declined",
+    completed: "Completed",
+}
