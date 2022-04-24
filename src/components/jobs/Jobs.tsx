@@ -61,7 +61,7 @@ export default function Jobs() {
 
     // This should filter out the current user's jobs
     const dgRows: GridRowsProp = jobs
-                                .filter(job => job.createdById !== userStore.user?.userId)
+                                ?.filter(job => job.createdById !== userStore.user?.userId)
                                 .map(job => (
                                     { 
                                         id: job.displayId, 
@@ -108,17 +108,24 @@ export default function Jobs() {
             </section>
             <main className="container mx-auto h-96 my-6 flex">
                 <div className="min-h-full grow font-sans">
-                    <DataGrid 
-                        autoHeight
-                        pageSize={10}
-                        rowsPerPageOptions={[5, 10, 25]}
-                        rows={dgRows}
-                        columns={dgColumns}
-                        sx={{ fontFamily: "inherit" }}
-                        onRowClick={params => {
-                            navigate(`/jobs/details/${params.id}`);
-                        }}
-                    />
+                    {jobs.length > 0 ? (
+                        <DataGrid 
+                            autoHeight
+                            pageSize={10}
+                            rowsPerPageOptions={[5, 10, 25]}
+                            rows={dgRows}
+                            columns={dgColumns}
+                            sx={{ fontFamily: "inherit" }}
+                            onRowClick={params => {
+                                navigate(`/jobs/details/${params.id}`);
+                            }}
+                        />
+                    ) : (
+                        <div className="px-6 py-4 bg-gray-200">
+                            <h2 className="mb-3 font-sans text-2xl">No jobs have yet been posted.</h2>
+                            <p className="text-sm text-gray-600">Please check back later to find available jobs!</p>
+                        </div>
+                    )}
                 </div>
             </main>
         </>
