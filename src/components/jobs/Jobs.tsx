@@ -60,8 +60,9 @@ export default function Jobs() {
     ];
 
     // This should filter out the current user's jobs
-    const dgRows: GridRowsProp = jobs
-                                ?.filter(job => job.createdById !== userStore.user?.userId)
+    const dgRows: GridRowsProp = jobs != null && jobs.length > 0
+                                ? jobs
+                                .filter(job => job.createdById !== userStore.user?.userId)
                                 .map(job => (
                                     { 
                                         id: job.displayId, 
@@ -70,7 +71,8 @@ export default function Jobs() {
                                         createdOn: job.createdOn, 
                                         createdBy: job.createdBy,
                                     }
-                                ));
+                                ))
+                                : Array({});
 
     if (userStore.isLoggedIn) {
         dgColumns.push({
