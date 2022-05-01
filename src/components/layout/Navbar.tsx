@@ -4,6 +4,7 @@ import { AppBar, Avatar, Container, IconButton, ListItemIcon, Menu, MenuItem, St
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AddIcon from '@mui/icons-material/Add';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import PeopleIcon from '@mui/icons-material/People';
 import { toast } from "react-toastify";
 import { useStore } from "../../stores/store";
 import logo from "../../images/sullivan-logo-color.png";
@@ -136,6 +137,14 @@ export default function Navbar() {
                                                 </ListItemIcon>
                                                 <Link to="/dashboard/job" className="font-sans text-gray-600">Add New Job</Link>
                                             </MenuItem>
+                                            {userStore.user?.roles.includes("Admin") && (
+                                                <MenuItem>
+                                                    <ListItemIcon>
+                                                        <PeopleIcon fontSize='small' sx={{ color: "#6B7280" }} />
+                                                    </ListItemIcon>
+                                                    <Link to="/admin/user-management" className="font-sans text-gray-600">User Management</Link>
+                                                </MenuItem>
+                                            )}
                                             <MenuItem>
                                                 <ListItemIcon>
                                                     <Logout fontSize="small" sx={{ color: "#6B7280" }} />

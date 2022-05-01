@@ -13,6 +13,7 @@ import { useStore } from './stores/store';
 import UserDashboard from './components/dashboard/UserDashboard';
 import NotFound from './components/NotFound';
 import UserProfile from './components/profile/UserProfile';
+import AdminRoute from "./components/layout/AdminRoute";
 import ProtectedRoute from './components/layout/PrivateRoute';
 import Job from './components/dashboard/Job';
 import Privacy from './components/Privacy';
@@ -21,6 +22,7 @@ import JobDetails from './components/jobs/JobDetails';
 import UserDashboardJobDetails from './components/dashboard/UserDashboardJobDetails';
 import UserRatings from './components/dashboard/UserRatings';
 import TokenTransactions from './components/dashboard/TokenTransactions';
+import UserManagement from "./components/admin/UserManagement";
 
 function App() {
   const {commonStore, userStore} = useStore();
@@ -62,6 +64,9 @@ function App() {
             <Route path="dashboard/ratings" element={<UserRatings />} />
             <Route path="dashboard/transactions" element={<TokenTransactions />} />
             <Route path="profile" element={<UserProfile />} />
+            <Route element={<AdminRoute />}>
+              <Route path="admin/user-management" element={<UserManagement />} />
+            </Route>
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

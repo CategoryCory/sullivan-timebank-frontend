@@ -5,6 +5,7 @@ export interface User {
     username: string;
     displayName: string;
     email: string;
+    roles: string[];
     image?: string;
     isApproved: boolean;
     token: string;
@@ -22,6 +23,7 @@ export interface UserProfile {
     phoneNumber: string;
     birthday: Date | null;
     biography: string;
+    isApproved?: boolean;
     skills: Skill[];
 }
 
