@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { format } from "date-fns";
 import { Link, useParams } from 'react-router-dom';
+import { Dialog as HUDialog, Transition } from '@headlessui/react';
 import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Rating, Tooltip } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
+import ChatIcon from '@mui/icons-material/Chat';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
@@ -29,6 +31,7 @@ export default function UserDashboardJobDetails() {
     const [userReview, setUserReview] = useState("");
     const [userRating, setUserRating] = useState(0);
     const [userRatingError, setUserRatingError] = useState(false);
+    const [messagePanelOpen, setMessagePanelOpen] = useState(false);
     const params = useParams();
     const { userStore } = useStore();
 
@@ -230,10 +233,10 @@ export default function UserDashboardJobDetails() {
                                         {jobApplications?.some(a => a.jobApplicationSchedule?.dayOfWeek === schedule.dayOfWeek) === false && (
                                             <p className='px-3 pt-2 text-sm text-gray-500'>There are no applicants for this day.</p>
                                         )}
-                                        <ul className='max-w-4xl divide-y divide-gray-200'>
+                                        <ul className='max-w-5xl divide-y divide-gray-200'>
                                             {jobApplications?.filter(a => a.jobApplicationSchedule?.dayOfWeek === schedule.dayOfWeek).map(a => (
                                                 <li key={a.jobApplicationId} className="px-3 py-2">
-                                                    <div className='grid grid-cols-[auto_25%_20%_100px]'>
+                                                    <div className='grid grid-cols-[auto_25%_20%_150px]'>
                                                         <div className=''>
                                                             <p className='font-bold'>
                                                                 {`${a.applicant?.firstName} ${a.applicant?.lastName}`}
@@ -339,6 +342,16 @@ export default function UserDashboardJobDetails() {
                                                                     </Tooltip>
                                                                 </>
                                                             )}
+                                                            <Tooltip title="Message this user">
+                                                                <button
+                                                                    className='h-8 w-8 inline-flex justify-center items-center bg-gray-100
+                                                                        text-gray-500 rounded hover:bg-violet-100 hover:text-violet-700 transition
+                                                                        duration-150'
+                                                                    onClick={() => setMessagePanelOpen(true)}
+                                                                >
+                                                                    <ChatIcon fontSize="small" />
+                                                                </button>
+                                                            </Tooltip>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -351,6 +364,8 @@ export default function UserDashboardJobDetails() {
                     )}
                 </section>
             </main>
+
+            {/* Dialog to record time for job */}
             <Dialog open={timeDialogOpen} onClose={handleTimeDialogClose} sx={{ fontFamily: "inherit" }}>
                 <DialogTitle
                     sx={{
@@ -399,8 +414,10 @@ export default function UserDashboardJobDetails() {
                     </DialogActions>
                 </DialogContent>
             </Dialog>
+
+            {/* Dialog to mark job as complete */}
             <Dialog open={completeAppDialogOpen} onClose={handleAppCompleteClose} sx={{ fontFamily: "inherit" }}>
-            <DialogTitle
+                <DialogTitle
                     sx={{
                         fontFamily: "inherit",
                         fontWeight: "bold",
@@ -461,6 +478,63 @@ export default function UserDashboardJobDetails() {
                     </DialogActions>
                 </DialogContent>
             </Dialog>
+
+            {/* Slide-over for messages */}
+            <Transition.Root show={messagePanelOpen} as={Fragment}>
+                <HUDialog as="div" className='relative z-10' onClose={() => setMessagePanelOpen(false)}>
+                    <Transition.Child
+                        as={Fragment}
+                        enter="ease-in-out"
+                        enterFrom="opacity-0 duration-300"
+                        enterTo="opacity-100"
+                        leave="ease-in-out duration-300"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                    >
+                        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                    </Transition.Child>
+                    <div className='fixed inset-0 overflow-hidden'>
+                        <div className='absolute inset-0 overflow-hidden'>
+                            <div className='pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16'>
+                                <Transition.Child
+                                    as={Fragment}
+                                    enter="transform transition ease-in-out duration-300 sm:duration-500"
+                                    enterFrom="translate-x-full"
+                                    enterTo="translate-x-0"
+                                    leave="transform transition ease-in-out duration-300 sm:duration-500"
+                                    leaveFrom="translate-x-0"
+                                    leaveTo="translate-x-full"
+                                >
+                                    <HUDialog.Panel className="pointer-events-auto w-screen max-w-2xl">
+                                        <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+                                            <div className='px-4 sm:px-6'>
+                                                <div className='flex items-start justify-between'>
+                                                    <HUDialog.Title className="text-lg font-medium text-gray-900">Title</HUDialog.Title>
+                                                    <div className="ml-3 flex h-7 items-center">
+                                                        <button
+                                                            type="button"
+                                                            className="grid place-items-center rounded-md bg-white text-gray-400
+                                                                hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500
+                                                                focus:ring-offset-2"
+                                                            onClick={() => setMessagePanelOpen(false)}
+                                                        >
+                                                            <span className='sr-only'>Close message panel</span>
+                                                            <CloseIcon />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className='relative mt-6 flex-1 px-4 sm:px-6'>
+                                                <p>Content goes here</p>
+                                            </div>
+                                        </div>
+                                    </HUDialog.Panel>
+                                </Transition.Child>
+                            </div>
+                        </div>
+                    </div>
+                </HUDialog>
+            </Transition.Root>
         </>
     )
 }
