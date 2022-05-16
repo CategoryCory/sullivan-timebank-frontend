@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { format } from "date-fns";
-import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
+// import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
 import { IMessage, IMessageThread, IMessageThreadCheck } from '../../models/userMessage';
 import { useStore } from "../../stores/store";
 
