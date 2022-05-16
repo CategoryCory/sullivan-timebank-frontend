@@ -11,11 +11,13 @@ import ChatIcon from '@mui/icons-material/Chat';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import MessagePanel from '../messages/MessagePanel';
 import { IJob, IJobApplication } from '../../models/job';
-import { getWeekdayLabel, getTimeOfDayLabel, jobApplicationStatuses } from "../common/values";
 import { ITokenTransaction } from '../../models/tokenTransactions';
 import { useStore } from "../../stores/store";
+import { IMessageThreadCheck } from '../../models/userMessage';
 import { UserRating } from '../../models/userRating';
+import { getWeekdayLabel, getTimeOfDayLabel, jobApplicationStatuses } from "../common/values";
 
 export default function UserDashboardJobDetails() {
     const [jobDetails, setJobDetails] = useState<IJob>();
@@ -32,6 +34,7 @@ export default function UserDashboardJobDetails() {
     const [userRating, setUserRating] = useState(0);
     const [userRatingError, setUserRatingError] = useState(false);
     const [messagePanelOpen, setMessagePanelOpen] = useState(false);
+    const [messageThreadDetails, setMessageThreadDetails] = useState<IMessageThreadCheck | undefined>(undefined);
     const params = useParams();
     const { userStore } = useStore();
 
@@ -171,6 +174,20 @@ export default function UserDashboardJobDetails() {
             console.error(error);
             handleAppCompleteClose();
         }
+    }
+
+    const handleOpenMessagePanel = async (jobApplicantId: string) => {
+        const msgThreadDetails: IMessageThreadCheck = {
+            jobId: jobDetails!.jobId!,
+            jobApplicantId
+        };
+        setMessageThreadDetails(msgThreadDetails);
+        setMessagePanelOpen(true);
+    }
+
+    const handleCloseMessagePanel = async () => {
+        setMessageThreadDetails(undefined);
+        setMessagePanelOpen(false);
     }
 
     return (
@@ -347,7 +364,7 @@ export default function UserDashboardJobDetails() {
                                                                     className='h-8 w-8 inline-flex justify-center items-center bg-gray-100
                                                                         text-gray-500 rounded hover:bg-violet-100 hover:text-violet-700 transition
                                                                         duration-150'
-                                                                    onClick={() => setMessagePanelOpen(true)}
+                                                                    onClick={() => handleOpenMessagePanel(a.applicant!.id!)}
                                                                 >
                                                                     <ChatIcon fontSize="small" />
                                                                 </button>
@@ -481,7 +498,7 @@ export default function UserDashboardJobDetails() {
 
             {/* Slide-over for messages */}
             <Transition.Root show={messagePanelOpen} as={Fragment}>
-                <HUDialog as="div" className='relative z-10' onClose={() => setMessagePanelOpen(false)}>
+                <HUDialog as="div" className='relative z-10' onClose={handleCloseMessagePanel}>
                     <Transition.Child
                         as={Fragment}
                         enter="ease-in-out"
@@ -506,17 +523,19 @@ export default function UserDashboardJobDetails() {
                                     leaveTo="translate-x-full"
                                 >
                                     <HUDialog.Panel className="pointer-events-auto w-screen max-w-2xl">
-                                        <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
-                                            <div className='px-4 sm:px-6'>
+                                        <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                                            <div className='px-4 sm:px-6 py-4 bg-gray-200'>
                                                 <div className='flex items-start justify-between'>
-                                                    <HUDialog.Title className="text-lg font-medium text-gray-900">Title</HUDialog.Title>
+                                                    <HUDialog.Title className="text-2xl font-sans font-bold text-gray-700">
+                                                        Messages
+                                                    </HUDialog.Title>
                                                     <div className="ml-3 flex h-7 items-center">
                                                         <button
                                                             type="button"
-                                                            className="grid place-items-center rounded-md bg-white text-gray-400
-                                                                hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500
+                                                            className="grid place-items-center p-1 rounded-full bg-indigo-700 text-white
+                                                                hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500
                                                                 focus:ring-offset-2"
-                                                            onClick={() => setMessagePanelOpen(false)}
+                                                            onClick={handleCloseMessagePanel}
                                                         >
                                                             <span className='sr-only'>Close message panel</span>
                                                             <CloseIcon />
@@ -525,7 +544,7 @@ export default function UserDashboardJobDetails() {
                                                 </div>
                                             </div>
                                             <div className='relative mt-6 flex-1 px-4 sm:px-6'>
-                                                <p>Content goes here</p>
+                                                <MessagePanel messageThreadDetails={messageThreadDetails} />
                                             </div>
                                         </div>
                                     </HUDialog.Panel>

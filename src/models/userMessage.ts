@@ -1,9 +1,15 @@
 export interface IMessageThread {
     messageThreadId?: number;
-    createdOn: Date;
+    createdOn?: Date;
     jobId: number;
     toUserId: string;
     fromUserId: string;
+}
+
+export interface IMessageThreadCheck {
+    jobId: number;
+    jobCreatorId?: string;
+    jobApplicantId: string;
 }
 
 export interface IMessage {
