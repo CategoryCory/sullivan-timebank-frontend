@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { format } from "date-fns";
 // import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
+import SendIcon from '@mui/icons-material/Send';
 import { IMessage, IMessageThread, IMessageThreadCheck } from '../../models/userMessage';
 import { useStore } from "../../stores/store";
 
@@ -172,9 +173,10 @@ export default function MessagePanel({ messageThreadDetails: msgDetails }: Props
                 <div className='flex justify-end'>
                     <button
                         type='submit'
-                        className='px-4 py-2 bg-indigo-600 text-white text-sm rounded'
+                        className='px-4 py-2 flex items-center gap-1 bg-indigo-600 text-white text-sm rounded
+                            hover:bg-indigo-700 transition duration-150'
                     >
-                        Send message
+                        <SendIcon fontSize="small" />Send message
                     </button>
                 </div>
             </form>
