@@ -58,10 +58,10 @@ const Account = {
 
 const Profile = {
     getProfileById: (userId: string) => {
-        return requests.get<UserProfile>(`/userprofile/${userId}`);
+        return requests.get<UserProfile>(`/users/${userId}`);
     },
     updateProfileById: (userId: string, userProfile: UserProfile) => {
-        return requests.put<UserProfile>(`/userprofile/${userId}`, userProfile);
+        return requests.put<UserProfile>(`/users/${userId}`, userProfile);
     }
 }
 
