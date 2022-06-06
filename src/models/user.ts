@@ -24,6 +24,7 @@ export interface UserProfile {
     birthday: Date | null;
     biography: string;
     isApproved?: boolean;
+    profileImage?: string;
     skills: Skill[];
 }
 

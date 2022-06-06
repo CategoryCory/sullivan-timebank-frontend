@@ -3,6 +3,7 @@ import { Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import { CircularProgress } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from 'uuid';
 import * as Yup from "yup";
@@ -11,6 +12,7 @@ import { useStore } from '../../stores/store';
 import LoadingComponent from "../LoadingComponent";
 import slugify from "../../helpers/slugify";
 import DateInput from '../common/forms/DateInput';
+import FileInput from '../common/forms/FileInput';
 import MultiSelectInput from '../common/forms/MultiSelectInput';
 import TextareaInput from '../common/forms/TextareaInput';
 import TextInput from '../common/forms/TextInput';
@@ -35,6 +37,7 @@ function UserProfileForm() {
         phoneNumber: "",
         birthday: null,
         biography: "",
+        profileImage: "",
         skills: Array<Skill>(),
     });
     
@@ -87,7 +90,8 @@ function UserProfileForm() {
                 zipCode: userProfile.zipCode ?? "",
                 phoneNumber: userProfile.phoneNumber ?? "",
                 birthday: userProfile.birthday,
-                biography: userProfile.biography ?? "", 
+                biography: userProfile.biography ?? "",
+                profileImage: userProfile.profileImage ?? "",
                 skills: userProfile.skills ?? new Array<Skill>(),
             }}
             validationSchema={Yup.object({
@@ -129,25 +133,27 @@ function UserProfileForm() {
             })}
             onSubmit={ async (values, { setErrors, setSubmitting }) => {
                 try {
-                    // Create array of Skills from currentSelections
-                    const currentUserSkills = currentSelections.map(selection => ({
-                            userSkillId: selection.__isNew__ ? uuidv4() : selection.value.split(".")[0],
-                            skillName: selection.label,
-                            skillNameSlug: selection.__isNew__ ? slugify(selection.label) : selection.value.split(".")[1],
-                            isNew: selection.__isNew__ ?? false,
-                        } as Skill
-                    ));
+                    console.log(values);
 
-                    // Add new skills to database
-                    const newSkills = currentUserSkills.filter(skill => skill.isNew != null && skill.isNew !== false)
-                    await skillStore.addSkills(newSkills);
+                    // // Create array of Skills from currentSelections
+                    // const currentUserSkills = currentSelections.map(selection => ({
+                    //         userSkillId: selection.__isNew__ ? uuidv4() : selection.value.split(".")[0],
+                    //         skillName: selection.label,
+                    //         skillNameSlug: selection.__isNew__ ? slugify(selection.label) : selection.value.split(".")[1],
+                    //         isNew: selection.__isNew__ ?? false,
+                    //     } as Skill
+                    // ));
 
-                    // Update profile data
-                    values.skills = currentUserSkills;
-                    updateUserById(userId, values).then(() => {
-                        setUserProfile(values);
-                        toast.success("Your profile has been successfully updated.");
-                    });
+                    // // Add new skills to database
+                    // const newSkills = currentUserSkills.filter(skill => skill.isNew != null && skill.isNew !== false)
+                    // await skillStore.addSkills(newSkills);
+
+                    // // Update profile data
+                    // values.skills = currentUserSkills;
+                    // updateUserById(userId, values).then(() => {
+                    //     setUserProfile(values);
+                    //     toast.success("Your profile has been successfully updated.");
+                    // });
                 } catch (error) {
                     toast.error("There was an error updating your profile.");
                     setSubmitting(false);
@@ -156,6 +162,12 @@ function UserProfileForm() {
         >
             {formik => (
                 <Form className='container mx-auto my-10 px-4'>
+                    <div className='w-full mb-6 pb-6 flex flex-col border-b-2 border-gray-300 md:flex-row'>
+                        <h4 className="text-gray-500 md:basis-1/3 md:flex-none lg:basis-1/4">
+                            Profile image
+                        </h4>
+                        <FileInput name="profileImage" />
+                    </div>
                     <div className='w-full mb-6 pb-6 flex flex-col border-b-2 border-gray-300 md:flex-row'>
                         <h4 className="text-gray-500 md:basis-1/3 md:flex-none lg:basis-1/4">
                             Personal information
