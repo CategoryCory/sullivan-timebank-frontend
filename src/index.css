@@ -22,12 +22,29 @@
     }
 
     .navlink {
-        @apply text-gray-500 font-bold hover:text-indigo-700 duration-150;
+        @apply px-1 pt-1 h-full inline-flex items-center font-bold text-gray-500 border-b-2 border-transparent 
+            hover:border-gray-300 hover:text-gray-700;
     }
 
     .active-navlink {
-        @apply relative text-indigo-700 font-bold after:absolute after:content-[''] after:-bottom-3 after:left-0
-            after:w-full after:h-1 after:bg-indigo-700;
+        @apply px-1 pt-1 h-full inline-flex items-center font-bold text-indigo-700 border-b-2 border-indigo-500;
+    }
+
+    .usermenu-navlink {
+        @apply w-full px-4 py-2 flex items-center gap-2 text-left text-gray-500;
+    }
+
+    .usermenu-active-navlink {
+        @apply w-full px-4 py-2 flex items-center gap-2 text-left text-gray-700 bg-gray-100;
+    }
+
+    .mobile-navlink {
+        @apply w-full pl-3 pr-4 py-2 block text-base text-gray-500 text-left border-l-4 border-transparent hover:bg-gray-50 
+            hover:border-gray-300 hover:text-gray-700;
+    }
+
+    .mobile-active-navlink {
+        @apply pl-3 pr-4 py-2 block text-base text-indigo-700 bg-indigo-50 border-l-4 border-indigo-500;
     }
 
     .btn {

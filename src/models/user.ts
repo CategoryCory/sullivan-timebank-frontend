@@ -1,3 +1,4 @@
+import { Photo } from "./photo";
 import { Skill } from "./skill";
 
 export interface User {
@@ -6,7 +7,7 @@ export interface User {
     displayName: string;
     email: string;
     roles: string[];
-    image?: string;
+    profileImageUrl?: string;
     isApproved: boolean;
     token: string;
 }
@@ -24,7 +25,9 @@ export interface UserProfile {
     birthday: Date | null;
     biography: string;
     isApproved?: boolean;
-    profileImage?: string;
+    // profileImage?: string;
+    // profileImageFile?: File;
+    photos?: Photo[];
     skills: Skill[];
 }
 

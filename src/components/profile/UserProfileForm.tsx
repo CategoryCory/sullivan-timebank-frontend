@@ -3,7 +3,6 @@ import { Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import { CircularProgress } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from 'uuid';
 import * as Yup from "yup";
@@ -18,7 +17,9 @@ import TextareaInput from '../common/forms/TextareaInput';
 import TextInput from '../common/forms/TextInput';
 import { OptionType } from '../../models/options';
 import { Skill } from '../../models/skill';
+import { Photo } from "../../models/photo";
 import { UserProfile } from '../../models/user';
+import axios, { AxiosError } from 'axios';
 
 function UserProfileForm() {
     const { userStore, userProfileStore, skillStore } = useStore();
@@ -37,7 +38,7 @@ function UserProfileForm() {
         phoneNumber: "",
         birthday: null,
         biography: "",
-        profileImage: "",
+        photos: Array<Photo>(),
         skills: Array<Skill>(),
     });
     
@@ -91,7 +92,7 @@ function UserProfileForm() {
                 phoneNumber: userProfile.phoneNumber ?? "",
                 birthday: userProfile.birthday,
                 biography: userProfile.biography ?? "",
-                profileImage: userProfile.profileImage ?? "",
+                profileImageFile: {} as File,
                 skills: userProfile.skills ?? new Array<Skill>(),
             }}
             validationSchema={Yup.object({
@@ -133,27 +134,40 @@ function UserProfileForm() {
             })}
             onSubmit={ async (values, { setErrors, setSubmitting }) => {
                 try {
-                    console.log(values);
+                    const formData = new FormData();
+                    formData.append('photo', values.profileImageFile);
 
-                    // // Create array of Skills from currentSelections
-                    // const currentUserSkills = currentSelections.map(selection => ({
-                    //         userSkillId: selection.__isNew__ ? uuidv4() : selection.value.split(".")[0],
-                    //         skillName: selection.label,
-                    //         skillNameSlug: selection.__isNew__ ? slugify(selection.label) : selection.value.split(".")[1],
-                    //         isNew: selection.__isNew__ ?? false,
-                    //     } as Skill
-                    // ));
+                    await axios.post("/photos", formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                        .then(response => {
+                            console.log(response.data);
+                        })
+                        .catch((error: AxiosError) => {
+                            console.error(error);
+                        });
 
-                    // // Add new skills to database
-                    // const newSkills = currentUserSkills.filter(skill => skill.isNew != null && skill.isNew !== false)
-                    // await skillStore.addSkills(newSkills);
+                    // Create array of Skills from currentSelections
+                    const currentUserSkills = currentSelections.map(selection => ({
+                            userSkillId: selection.__isNew__ ? uuidv4() : selection.value.split(".")[0],
+                            skillName: selection.label,
+                            skillNameSlug: selection.__isNew__ ? slugify(selection.label) : selection.value.split(".")[1],
+                            isNew: selection.__isNew__ ?? false,
+                        } as Skill
+                    ));
 
-                    // // Update profile data
-                    // values.skills = currentUserSkills;
-                    // updateUserById(userId, values).then(() => {
-                    //     setUserProfile(values);
-                    //     toast.success("Your profile has been successfully updated.");
-                    // });
+                    // Add new skills to database
+                    const newSkills = currentUserSkills.filter(skill => skill.isNew != null && skill.isNew !== false)
+                    await skillStore.addSkills(newSkills);
+
+                    // Update profile data
+                    values.skills = currentUserSkills;
+                    updateUserById(userId, values).then(() => {
+                        setUserProfile(values);
+                        toast.success("Your profile has been successfully updated.");
+                    });
                 } catch (error) {
                     toast.error("There was an error updating your profile.");
                     setSubmitting(false);
@@ -166,7 +180,7 @@ function UserProfileForm() {
                         <h4 className="text-gray-500 md:basis-1/3 md:flex-none lg:basis-1/4">
                             Profile image
                         </h4>
-                        <FileInput name="profileImage" />
+                        <FileInput name="profileImageFile" />
                     </div>
                     <div className='w-full mb-6 pb-6 flex flex-col border-b-2 border-gray-300 md:flex-row'>
                         <h4 className="text-gray-500 md:basis-1/3 md:flex-none lg:basis-1/4">
