@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { AdjustmentsIcon, DocumentAddIcon, IdentificationIcon, LogoutIcon, MenuIcon, UserCircleIcon, XIcon } from "@heroicons/react/outline";
+import { UserCircleIcon as UserSolid } from "@heroicons/react/solid";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useStore } from "../../stores/store";
@@ -69,7 +70,7 @@ export default function Navbar() {
                                         <Menu as="div" className="ml-3 relative">
                                             <div>
                                                 <Menu.Button 
-                                                    className="w-9 h-9 bg-white rounded-full flex text-sm focus:outline-none 
+                                                    className="w-11 h-11 bg-white rounded-full flex text-sm focus:outline-none 
                                                     focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                                 >
                                                     <span className="sr-only">Open user menu</span>
@@ -77,9 +78,9 @@ export default function Navbar() {
                                                         ? <img 
                                                             src={userStore.user.profileImageUrl}
                                                             alt={userStore.user.displayName}
-                                                            className="max-w-9 max-h-9 rounded-full"
+                                                            className="object-cover object-center rounded-full"
                                                         />
-                                                        : <UserCircleIcon className="w-9 h-9 text-gray-500 bg-gray-100 rounded-full" />
+                                                        : <UserSolid className="text-gray-500" />
                                                     }
                                                 </Menu.Button>
                                             </div>
@@ -219,9 +220,9 @@ export default function Navbar() {
                                             ? <img 
                                                 src={userStore.user.profileImageUrl}
                                                 alt={userStore.user.displayName}
-                                                className="max-w-9 max-h-9 rounded-full"
+                                                className="w-11 h-11 object-cover object-center rounded-full"
                                             />
-                                            : <UserCircleIcon className="w-9 h-9 text-gray-500 bg-gray-100 rounded-full" />
+                                            : <UserCircleIcon className="w-10 h-10 text-gray-500 bg-gray-100 rounded-full" />
                                         }
                                     </div>
                                     <div className="ml-3">
