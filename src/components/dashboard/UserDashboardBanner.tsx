@@ -26,7 +26,7 @@ function UserDashboardBanner() {
     return (
         <section className='py-6 bg-gray-100'>
             <div className='container mx-auto px-4 grid grid-cols-4 items-center'>
-                <div className=''>
+                <div className='col-span-2 lg:col-span-1'>
                     <div>
                         <span className='font-bold'>Your Rating</span>
                         <Link to="/dashboard/ratings" className='ml-2 font-normal text-sm text-indigo-500 hover:underline hover:text-indigo-700'>
@@ -40,7 +40,7 @@ function UserDashboardBanner() {
                         }
                     </p>
                 </div>
-                <div className=''>
+                <div className='col-span-2 lg:col-span-1'>
                     <p className='font-bold'>
                         Your Coins
                         <Link to="/dashboard/transactions" className='ml-2 font-normal text-sm text-indigo-500 hover:underline hover:text-indigo-700'>
@@ -54,13 +54,13 @@ function UserDashboardBanner() {
                         }
                     </p>
                 </div>
-                <div className='col-span-2'>
-                    <p className='mb-3 font-bold'>Alerts &amp; Notifications</p>
+                <div className='hidden lg:col-span-2'>
+                    {/* <p className='mb-3 font-bold'>Alerts &amp; Notifications</p>
                     <div className='space-y-4'>
                         <p className='pt-4 pl-3 border-t-2 border-t-gray-300'>Lorem ipsum dolor sit amet.</p>
                         <p className='pt-4 pl-3 border-t-2 border-t-gray-300'>Lorem ipsum dolor sit amet.</p>
                         <p className='pt-4 pl-3 border-t-2 border-t-gray-300'>Lorem ipsum dolor sit amet.</p>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </section>

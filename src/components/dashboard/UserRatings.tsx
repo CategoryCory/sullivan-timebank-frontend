@@ -61,6 +61,7 @@ export default function UserRatings() {
                                 <Rating
                                     name={`rating-${rating.userRatingId}`}
                                     value={rating.rating}
+                                    precision={0.25}
                                     readOnly
                                 />
                             </div>
