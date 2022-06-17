@@ -17,7 +17,7 @@ import TextareaInput from '../common/forms/TextareaInput';
 import TextInput from '../common/forms/TextInput';
 import { OptionType } from '../../models/options';
 import { Skill } from '../../models/skill';
-import { Photo } from "../../models/photo";
+import { IPhoto } from "../../models/photo";
 import { UserProfile } from '../../models/user';
 import axios, { AxiosError } from 'axios';
 
@@ -38,7 +38,7 @@ function UserProfileForm() {
         phoneNumber: "",
         birthday: null,
         biography: "",
-        photos: Array<Photo>(),
+        photos: Array<IPhoto>(),
         skills: Array<Skill>(),
     });
     

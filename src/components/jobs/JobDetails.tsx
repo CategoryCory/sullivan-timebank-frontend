@@ -13,6 +13,7 @@ import guidTest from "../../helpers/guidTest";
 import scheduleFormatter from "../../helpers/scheduleFormatter";
 import { IJob, IJobApplication, IJobCustomSchedule } from '../../models/job';
 import { Dialog, Transition } from '@headlessui/react';
+import { IPhoto } from '../../models/photo';
 
 interface IJobApplicationCheck {
     applicationExists: boolean;
@@ -34,6 +35,7 @@ export default function JobDetails() {
         createdBy: "",
         jobSchedules: new Array<IJobCustomSchedule>(),
     });
+    const [createdByProfileImage, setCreatedByProfileImage] = useState<IPhoto | null>(null);
     const [scheduleIds, setScheduleIds] = useState<number[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [existingApplication, setExistingApplication] = useState<IJobApplicationCheck>({
@@ -58,11 +60,23 @@ export default function JobDetails() {
                 .then(res => {
                     setJobDetails(res.data);
                 })
-                .catch(err => {
+                .catch((err: AxiosError) => {
                     console.error(err);
                 });
         }
     }, [jobId]);
+
+    useEffect(() => {
+        if (jobDetails.createdById !== "") {
+            axios.get<IPhoto>(`/photos/?userId=${jobDetails.createdById}`)
+                .then(res => {
+                    setCreatedByProfileImage(res.data);
+                })
+                .catch((err: AxiosError) => {
+                    console.error(err);
+                })
+        }
+    }, [jobDetails.createdById]);
 
     useEffect(() => {
         if (jobDetails.displayId) {
@@ -150,9 +164,16 @@ export default function JobDetails() {
                 </div>
                 <section className='mb-4 px-8 py-4 flex items-center gap-8 bg-gray-100 rounded-xl'>
                     {userStore.isLoggedIn && 
-                        <div className='pr-8 border-r border-r-gray-400'>
-                            <p className='font-bold text-gray-700'>{jobDetails.createdBy}</p>
-                            <p className='text-sm text-gray-500'>No reviews</p>
+                        <div className="flex items-center gap-4">
+                            <img 
+                                src={createdByProfileImage?.url}
+                                alt={jobDetails.createdBy}
+                                className="w-14 h-14 object-cover rounded-full"
+                            />
+                            <div className='pr-8 border-r border-r-gray-400'>
+                                <p className='font-bold text-gray-700'>{jobDetails.createdBy}</p>
+                                <p className='text-sm text-gray-500'>No reviews</p>
+                            </div>
                         </div>
                     }
                     <div className='pr-8 border-r border-r-gray-400'>

@@ -1,4 +1,4 @@
-import { Photo } from "./photo";
+import { IPhoto } from "./photo";
 import { Skill } from "./skill";
 
 export interface User {
@@ -27,7 +27,7 @@ export interface UserProfile {
     isApproved?: boolean;
     // profileImage?: string;
     // profileImageFile?: File;
-    photos?: Photo[];
+    photos?: IPhoto[];
     skills: Skill[];
 }
 
