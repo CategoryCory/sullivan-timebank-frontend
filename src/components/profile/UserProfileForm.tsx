@@ -24,6 +24,7 @@ import axios, { AxiosError } from 'axios';
 function UserProfileForm() {
     const { userStore, userProfileStore, skillStore } = useStore();
     const { getUserById, updateUserById, loadingInitial, loading } = userProfileStore;
+    const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(undefined);
     const [skillOptions, setSkillOptions] = useState<OptionType[]>([]);
     const [currentSelections, setCurrentSelections] = useState<OptionType[]>([]);
     const [multiSelectKey, setMultiSelectKey] = useState("");
@@ -64,6 +65,11 @@ function UserProfileForm() {
         if (userId !== "") {
             getUserById(userId).then(profile => {
                 setUserProfile(profile!);
+
+                if (profile?.photos && profile?.photos?.length > 0) {
+                    const currentImage = profile.photos.find(p => p.isCurrent === true);
+                    setProfileImageUrl(currentImage?.url);
+                }
 
                 setCurrentSelections([]);
 
@@ -180,7 +186,10 @@ function UserProfileForm() {
                         <h4 className="text-gray-500 md:basis-1/3 md:flex-none lg:basis-1/4">
                             Profile image
                         </h4>
-                        <FileInput name="profileImageFile" />
+                        <FileInput 
+                            name="profileImageFile"
+                            currentPhotoUrl={profileImageUrl}
+                        />
                     </div>
                     <div className='w-full mb-6 pb-6 flex flex-col border-b-2 border-gray-300 md:flex-row'>
                         <h4 className="text-gray-500 md:basis-1/3 md:flex-none lg:basis-1/4">

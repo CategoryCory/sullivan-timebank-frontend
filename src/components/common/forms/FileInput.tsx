@@ -4,11 +4,12 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 interface Props {
     name: string;
+    currentPhotoUrl?: string;
     maxSizeInMB?: number;
 }
 
 export default function FileInput(props: Props) {
-    const [labelText, setLabelText] = useState<string>("Click here to upload a file");
+    const [labelText, setLabelText] = useState<string>("");
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const [uploadedFileURL, setUploadedFileURL] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -16,6 +17,15 @@ export default function FileInput(props: Props) {
 
     // If max size isn't set in props, set default of 5MB
     const maxFileSize = props.maxSizeInMB ?? 5242880;
+
+    useEffect(() => {
+        if (props.currentPhotoUrl) {
+            setUploadedFileURL(props.currentPhotoUrl);
+            setLabelText("Change selected file");
+        } else {
+            setLabelText("Click here to upload a file");
+        }
+    }, [props.currentPhotoUrl]);
 
     useEffect(() => {
         if (uploadedFile) {
