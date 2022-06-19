@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: Props) => {
         }
 
         setIsLoading(false);
-    }, []);
+    }, [axios]);
 
     const refreshUser = useCallback(async () => {
         const token = window.localStorage.getItem("jwt");
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: Props) => {
         }
 
         setIsLoading(false);
-    }, []);
+    }, [axios]);
 
     const signOut = useCallback(() => {
         window.localStorage.removeItem("jwt");
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }: Props) => {
         signIn,
         refreshUser,
         signOut,
-    }), [user, isLoading, isLoggedIn, isAdmin]);
+    }), [user, isLoading, isLoggedIn, isAdmin, signIn, refreshUser, signOut]);
 
     return (
         <AuthContext.Provider value={contextValue}>
