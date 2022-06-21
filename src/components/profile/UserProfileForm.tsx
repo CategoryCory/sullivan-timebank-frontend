@@ -6,7 +6,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from 'uuid';
 import * as Yup from "yup";
-import agent from '../../api/agent';
 import { useStore } from '../../stores/store';
 import LoadingComponent from "../LoadingComponent";
 import slugify from "../../helpers/slugify";
@@ -22,10 +21,9 @@ import { UserProfile } from '../../models/user';
 import axios, { AxiosError } from 'axios';
 
 function UserProfileForm() {
-    const { userStore, userProfileStore, skillStore } = useStore();
+    const { userStore, userProfileStore } = useStore();
     const { getUserById, updateUserById, loadingInitial, loading } = userProfileStore;
     const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(undefined);
-    const [skillOptions, setSkillOptions] = useState<OptionType[]>([]);
     const [currentSelections, setCurrentSelections] = useState<OptionType[]>([]);
     const [multiSelectKey, setMultiSelectKey] = useState("");
     const [userProfile, setUserProfile] = useState<UserProfile>({
@@ -49,18 +47,6 @@ function UserProfileForm() {
         userId = userStore.user.userId;
     }
     
-    useEffect(() => {
-        agent.Skills.getSkills().then(skills => {
-            setSkillOptions([]);
-
-            Array.from(skills).forEach(skill => {
-                const skillOptionValue = `${skill.userSkillId!}.${skill.skillNameSlug!}`;
-                const skillToAdd = { value: skillOptionValue, label: skill.skillName };
-                setSkillOptions(existing => [...existing, skillToAdd]);
-            });
-        });
-    }, []);
-
     useEffect(() => {
         if (userId !== "") {
             getUserById(userId).then(profile => {
@@ -138,25 +124,28 @@ function UserProfileForm() {
                             .string()
                             .max(500, "Biography cannot be greater than 500 characters."),
             })}
-            onSubmit={ async (values, { setErrors, setSubmitting }) => {
+            onSubmit={ async (values, { setErrors, setSubmitting } ) => {
                 try {
-                    const formData = new FormData();
-                    formData.append('photo', values.profileImageFile);
-
-                    await axios.post("/photos", formData, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    })
-                        .then(response => {
-                            console.log(response.data);
-                        })
-                        .catch((error: AxiosError) => {
-                            console.error(error);
-                        });
+                    if (values.profileImageFile.size != null && values.profileImageFile.size > 0) {
+                        const formData = new FormData();
+                        formData.append('photo', values.profileImageFile);
+    
+                        await axios.post<IPhoto>("/photos", formData, {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                }
+                            })
+                            .then(response => {
+                                // console.log(response.data);
+                                // userStore.getUser();
+                            })
+                            .catch((error: AxiosError) => {
+                                console.error(error);
+                            });
+                    }
 
                     // Create array of Skills from currentSelections
-                    const currentUserSkills = currentSelections.map(selection => ({
+                    values.skills = currentSelections.map(selection => ({
                             userSkillId: selection.__isNew__ ? uuidv4() : selection.value.split(".")[0],
                             skillName: selection.label,
                             skillNameSlug: selection.__isNew__ ? slugify(selection.label) : selection.value.split(".")[1],
@@ -164,14 +153,13 @@ function UserProfileForm() {
                         } as Skill
                     ));
 
-                    // Add new skills to database
-                    const newSkills = currentUserSkills.filter(skill => skill.isNew != null && skill.isNew !== false)
-                    await skillStore.addSkills(newSkills);
-
-                    // Update profile data
-                    values.skills = currentUserSkills;
-                    updateUserById(userId, values).then(() => {
-                        setUserProfile(values);
+                    updateUserById(userId, values).then(async () => {
+                        const updatedProfile = await getUserById(userId);
+                        setUserProfile(updatedProfile!);
+                        if (updatedProfile?.photos && updatedProfile?.photos?.length > 0) {
+                            setProfileImageUrl(updatedProfile.photos[0].url);
+                        }
+                        await userStore.getUser();
                         toast.success("Your profile has been successfully updated.");
                     });
                 } catch (error) {
@@ -257,7 +245,6 @@ function UserProfileForm() {
                                 name='skills'
                                 label='Skills'
                                 isMultiSelect
-                                options={skillOptions}
                                 currentSelections={currentSelections}
                                 onSelectionChange={setCurrentSelections}
                             />

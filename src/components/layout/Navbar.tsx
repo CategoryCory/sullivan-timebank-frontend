@@ -6,9 +6,11 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useStore } from "../../stores/store";
 import logo from "../../images/sullivan-logo-color.png";
+import { observer } from 'mobx-react-lite';
 
-export default function Navbar() {
+function Navbar() {
     const [logoutSuccess, setLogoutSuccess] = useState(false);
+    const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(undefined)
     const navigate = useNavigate();
     const { userStore } = useStore();
 
@@ -20,6 +22,13 @@ export default function Navbar() {
             console.error(error);
         }
     }
+
+    useEffect(() => {
+        // if (userProfileStore.userProfile?.photos && userProfileStore.userProfile.photos.length > 0) {
+        //     setProfileImage(userProfileStore.userProfile.photos[0]);
+        // }
+        setProfileImageUrl(userStore.user?.profileImageUrl);
+    }, [userStore.user?.profileImageUrl]);
 
     useEffect(() => {
         if (logoutSuccess) {
@@ -70,15 +79,15 @@ export default function Navbar() {
                                         <Menu as="div" className="ml-3 relative">
                                             <div>
                                                 <Menu.Button 
-                                                    className="w-11 h-11 bg-white rounded-full flex text-sm focus:outline-none 
+                                                    className="bg-white rounded-full flex text-sm focus:outline-none 
                                                     focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                                 >
                                                     <span className="sr-only">Open user menu</span>
-                                                    {userStore.user?.profileImageUrl && userStore.user.profileImageUrl !== ""
+                                                    {profileImageUrl != null
                                                         ? <img 
-                                                            src={userStore.user.profileImageUrl}
-                                                            alt={userStore.user.displayName}
-                                                            className="object-cover object-center rounded-full"
+                                                            src={profileImageUrl}
+                                                            alt={`${userStore.user?.displayName} profile`}
+                                                            className="w-10 h-10 object-cover object-center rounded-full"
                                                         />
                                                         : <UserSolid className="text-gray-500" />
                                                     }
@@ -276,3 +285,5 @@ export default function Navbar() {
         </Disclosure>
     )
 }
+
+export default observer(Navbar);

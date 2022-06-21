@@ -8,7 +8,7 @@ interface Props {
     label: string;
     name: string;
     isMultiSelect?: true | undefined;
-    options: Array<OptionType>;
+    options?: Array<OptionType>;
     currentSelections: Array<OptionType>;
     onSelectionChange: (selections: OptionType[]) => void;
 }

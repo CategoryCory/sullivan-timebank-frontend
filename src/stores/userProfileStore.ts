@@ -18,29 +18,26 @@ export default class UserProfileStore {
     }
 
     getUserById = async (userId: string) => {
-        // if (this.userProfile != null) {
-        //     return this.userProfile;
-        // } else {
-            this.setLoadingInitial(true);
-            try {
-                const userProfile = await agent.Profile.getProfileById(userId);
-                runInAction(() => this.userProfile = userProfile);
-                this.setLoadingInitial(false);
-                return userProfile;
-            } catch (error) {
-                console.error(error);
-                this.setLoadingInitial(false);
-            }
-        // }
+        this.setLoadingInitial(true);
+        try {
+            const userProfile = await agent.Profile.getProfileById(userId);
+            runInAction(() => this.userProfile = userProfile);
+            this.setLoadingInitial(false);
+            return userProfile;
+        } catch (error) {
+            console.error(error);
+            this.setLoadingInitial(false);
+        }
     }
 
     updateUserById = async (userId: string, userProfile: UserProfile) => {
         this.loading = true;
         try {
             // Update user profile
-            await agent.Profile.updateProfileById(userId, userProfile);
+            const updatedProfile = await agent.Profile.updateProfileById(userId, userProfile);
             runInAction(() => {
-                this.userProfile = userProfile;
+                this.userProfile = updatedProfile;
+                this.userProfile.photos = updatedProfile.photos;
                 this.editMode = false;
                 this.loading = false;
             });
